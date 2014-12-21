@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- META -->
+	<title>Begrebsbase</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="description" content="Database over faglige begreber" />
+	
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="css/colorbox.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="style.css" media="all" />
+	
+	
+	
+	<!-- Javascript -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/kickstart.js"></script>
+	<script type="text/javascript" src="js/jquery.colorbox-min.js"></script>
+</head>
+<body onload="initialize ()">
+
+
+<div class="grid">
+	<div class="col_9">
+		<input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette" />
+    <button title="Opret nyt begreb i databasen" class="small green icon-plus" onclick="opret()" style="top: 4px;"> Opret</button>
+    <button title="Opdatér" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 4px;"></button>
+    <i title="Tags" class="icon-tags" style="opacity: 0.5; color: #06f; margin-left: 2em;"></i><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
+    <a id="comment" title="Kommentér på udviklingen af begrebsbasen" class="icon-comments icon-large" style="float: right; color: #999; cursor: pointer;" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a>
+    <div class="col_12">
+      <span id="sortering" style="opacity: 0.5; font-family: verdana, arial; font-size: 0.7em;">Sortér begreber efter:</span>
+      <button id="SortAbc" onClick="sort('abc')" class="small" style="cursor: pointer; font-size: 0.5em;" title="Sorter alfabetisk med A øverst"> Abc</a>
+      <button id="SortCba" onClick="sort('cba')" class="small" style="cursor: pointer; font-size: 0.5em;" title="Sorter alfabetisk med A nederst"> Åøæ</a>
+      <button id="Sort123" onClick="sort('123')" class="small" style="cursor: pointer; font-size: 0.5em;" title="Sorter med nyest opdaterede begreb øverst"> 1sek</a>
+      <button id="Sort321" onClick="sort('321')" class="small" style="cursor: pointer; font-size: 0.5em;" title="Sorter med nyest opdaterede begreb nederst"> 99år</a>
+    </div>
+    <div id="searchresults" class="col_12"></div> <!-- End list of terms -->
+	</div> <!-- End left column -->
+	<div class="col_3" style="padding: 10px; opacity: 1;">
+		<H5 style="margin: 0;">Min begrebsliste</H5>
+	  <div id="myList" class="col_12"></div>
+		<a id="eksporterListe" title="Eksportér begrebslisten som liste" class="icon-download" style="margin-bottom: .5em; cursor: pointer; float: right;"> Eksportér som liste <i class="icon-list" style="cursor: pointer"></i></a>
+		<a id="eksporterTabel" title="Eksportér begrebslisten som tabel" class="icon-download" style="cursor: pointer; float: right;"> Eksportér som tabel <i class="icon-table" style="cursor: pointer"></i></a>
+	</div> <!-- End right column -->
+</div> <!-- End Grid -->
+
+<!-- ===================================== START FOOTER ===================================== -->
+<div class="clear"></div>
+<div id="footer">
+This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a> 2014 under a <a href="http://creativecommons.org/licenses/by-nc/3.0/">Creative Commons License</a> for attributed, non-commercial use. <BR />Built with <a href="http://www.99lime.com/elements/">HTML Kickstart</a>, <a href="http://jquery.com/">jQuery</a>, <a href="http://php.net/">PHP</a> and <a href="http://www.mysql.com/">MySQL</a>.
+</div>
+
+<script language="javascript" type="text/javascript">
+
+  var conceptsTable;
+  var tagsTable;
+  var availableTags = [];
+  var conceptTagsTable;
+  
+  var initialize = function () {
+    sort("abc");
+    refresh();
+    $("#myList").parent().hide();
+    $("#myList").sortable({
+      cursor: "move",
+      update : function(event, ui) {
+        opdaterBegrebsliste();
+      }
+    });
+    $("#myList").disableSelection();
+  }
+  
+  var refresh = function() {
+    $('#searchresults').html("<img src='css/images/loading.gif' />");
+    setTimeout(function() {
+      getDB();
+    }, 25);
+  }
+  
+  var sort = function(order) {
+    $("#SortAbc").removeClass("blue");
+    $("#SortCba").removeClass("blue");
+    $("#Sort123").removeClass("blue");
+    $("#Sort321").removeClass("blue");
+    if (order == "abc") {
+      $("#SortAbc").addClass("blue");
+    } else if (order == "cba") {
+      $("#SortCba").addClass("blue");
+    } else if (order == "123") {
+      $("#Sort123").addClass("blue");
+    } else if (order == "321") {
+      $("#Sort321").addClass("blue");
+    } else {
+      console.log("Error: unknow sort order in sort()");
+    }
+    refresh();
+  } 
+  
+  var getDB = function() {
+    //-----------------------------------------------------------------------
+    // 1) get tags table
+    //-----------------------------------------------------------------------
+    availableTags = [];
+    $.ajax({                                      
+      url: 'getTags.php',               //the script to call to get data          
+      data: "",                       //you can insert url argumnets here to pass to api.php
+                                      //for example "id=5&parent=6"
+      dataType: 'json',               //data format      
+      success: function(tagData)         //on recieve of reply
+      {
+        tagsTable = tagData;
+        for(var j=0; j<tagData.length; j++) {
+          availableTags.push(tagsTable[j].name);             //form array for autofill in tagsearchbox
+        }
+        $("#tagsearchbox").autocomplete({
+          source: availableTags,
+          messages: {
+            noResults: '',
+            results: function() {}
+          }
+        });
+        
+ 
+        //-----------------------------------------------------------------------
+        // 2) get concepttags table
+        //-----------------------------------------------------------------------
+            $.ajax({                                      
+          url: 'getConceptTags.php',               //the script to call to get data          
+          data: "",                       //you can insert url argumnets here to pass to api.php
+                                          //for example "id=5&parent=6"
+          dataType: 'json',               //data format      
+          success: function(conceptTagData)         //on recieve of reply
+          {
+            conceptTagsTable = conceptTagData;
+            //-----------------------------------------------------------------------
+            // 3) get concepts table
+            //-----------------------------------------------------------------------
+            $.ajax({                                      
+              url: 'getConcepts.php',               //the script to call to get data          
+              data: "",                       //you can insert url argumnets here to pass to api.php
+                                              //for example "id=5&parent=6"
+              dataType: 'json',               //data format      
+              success: function(dbData)         //on recieve of reply
+              {
+                var searchOutput = "";
+                conceptsTable = dbData;
+                
+                //sort conceptstable by name
+                if ($("#SortAbc").hasClass("blue")) {
+                  conceptsTable.sort(sortByNameAbc);  
+                } else if ($("#SortCba").hasClass("blue")) {
+                  conceptsTable.sort(sortByNameCba);
+                } else if ($("#Sort123").hasClass("blue")) {
+                  conceptsTable.sort(sortByUpdated123);
+                } else if ($("#Sort321").hasClass("blue")) {
+                  conceptsTable.sort(sortByUpdated321);
+                }
+                
+                for(var j=0; j<conceptsTable.length; j++)
+                  {
+                    var id = conceptsTable[j].id;             //get id
+                    var name = conceptsTable[j].name;           //get name
+                    var description = conceptsTable[j].description;    //get description
+                    var created = conceptsTable[j].created;        //get creation timestamp
+                    var updated = conceptsTable[j].updated        //get updated timestamp
+                    searchOutput += '<div class="col_12 visible concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
+                      "<H6 id='h" + id + "' contenteditable='true' style='margin: 5px 0 5px 0;'>" + name + "</H6>" + 
+                      "<p id='p" + id + "' contenteditable='true'>" + description + "</p>" +
+                      tagsHTML(id) +
+                      updatedHTML(id) + 
+                      '</div><div class="col_1" style="text-align: right;">' + 
+                      '<span title="Slet begrebet fra databasen" class="icon-remove" style="cursor: pointer; color: red; margin: 5px 5px;" onClick="slet(' + id + ')"> </span><br /><br />' +
+                      '<span title="Tilføj begrebet til din begrebsliste" class="icon-large icon-arrow-right" style="cursor: pointer; color: #77F; margin: 5px 5px;" onClick="tilføj(' + id + ')"> </span>' +
+                      '</div></div>';
+                  }
+        
+                //--------------------------------------------------------------------
+                // 4) Update html content
+                //--------------------------------------------------------------------
+                $('#searchresults').html(searchOutput) //Set output element html
+                $('#sortering').html("sortér " + conceptsTable.length + " begreber: ") //Set output element html
+                search();
+              } 
+            });
+          } 
+        });
+      } 
+    });
+  }; 
+
+  var sortByNameAbc = function (a, b) {
+    var aName = a.name.toLowerCase();
+    var bName = b.name.toLowerCase(); 
+    return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+  }
+  
+  var sortByNameCba = function (a, b) {
+    var aName = a.name.toLowerCase();
+    var bName = b.name.toLowerCase(); 
+    return ((aName > bName) ? -1 : ((aName < bName) ? 1 : 0));
+  }
+  
+  var sortByUpdated321 = function (a, b) {
+    var aUpdated = timestampToDate(a.updated)
+    if (a.updated == "0000-00-00 00:00:00") {aUpdated = timestampToDate(a.created);}
+    var bUpdated = timestampToDate(b.updated);
+    if (b.updated == "0000-00-00 00:00:00") {bUpdated = timestampToDate(b.created);}
+    return ((aUpdated < bUpdated) ? -1 : ((aUpdated > bUpdated) ? 1 : 0));
+  }
+  
+  var sortByUpdated123 = function (a, b) {
+    var aUpdated = timestampToDate(a.updated);
+    if (a.updated == "0000-00-00 00:00:00") {aUpdated = timestampToDate(a.created);}
+    var bUpdated = timestampToDate(b.updated);
+    if (b.updated == "0000-00-00 00:00:00") {bUpdated = timestampToDate(b.created);}
+    return ((aUpdated > bUpdated) ? -1 : ((aUpdated < bUpdated) ? 1 : 0));
+  }
+
+  var timestampToDate = function (t) {
+    t = t.split(/[- :]/);
+    return new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+  }
+
+  var updatedHTML = function(id) {
+    var t = '<div class="updated col_6" style="margin-top: 0.2em; opacity: 0.5; font-size: 0.8em;"><i title="sidst opdateret" class="icon-time icon-small"></i> ';     
+    for (index = 0; index < conceptsTable.length; ++index) {
+      if (conceptsTable[index].id == id) {
+        if (conceptsTable[index].updated !== "0000-00-00 00:00:00") {
+          t += "opdateret for " + timeSince(timestampToDate(conceptsTable[index].updated)) + " siden af anonym";
+        } else {
+          t += "opdateret for " + timeSince(timestampToDate(conceptsTable[index].created)) + " siden af anonym";
+        }
+      }
+    }
+    t += "</div>";
+    return t;
+  }
+  
+  function timeSince(date) {
+    var seconds = Math.floor((new Date() - date) / 1000);
+    var interval = Math.floor(seconds / 31536000);
+    if (interval > 1) {
+        return interval + " år";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+        return interval + " måneder";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+        return interval + " dage";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+        return interval + " timer";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+        return interval + " minutter";
+    }
+    return Math.floor(seconds) + " sekunder";
+  }
+
+  var tagsHTML = function(id) {
+    var t = '<div class="tags"><i title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></i> <a title="Tilføj tag" class="icon-plus-sign" style="opacity: .75; margin-left: .5em; color: green; cursor: pointer;" onClick="tilføjTag(' + id + ')"></a>';     
+    for (index = 0; index < conceptTagsTable.length; ++index) {
+      if (conceptTagsTable[index].conceptid == id) {
+        var tag = tagNameFromId(conceptTagsTable[index].tagid);
+        t += ' <a title="Fjern tagget ' + tag + '" class="icon-remove-sign" style="opacity: .75; margin-left: .5em; color: red; cursor: pointer;" onClick="fjernTag(' + conceptTagsTable[index].tagid + ', ' + id + ')"></a> <span style="opacity: 0.75; color: #06f; cursor: pointer;" onClick="tagFilter(' + conceptTagsTable[index].tagid + ')">' + tag + '</span>';
+      }
+    }
+    t += "</div>";
+    return t;
+  }
+  
+  var tagNameFromId = function (id) {
+    for (i = 0; i < tagsTable.length; ++i) {
+      if (tagsTable[i].id == id) {
+        return tagsTable[i].name;
+      }
+    }
+    return "";
+  }
+  
+  var conceptNameFromId = function (id) {
+    for (i = 0; i < conceptsTable.length; ++i) {
+      if (conceptsTable[i].id == id) {
+        return conceptsTable[i].name;
+      }
+    }
+  }
+
+  var tagFilter = function (id) {
+    $("#tagsearchbox").val(tagNameFromId(id));
+    setTimeout(function()
+      {
+        search();
+      }, 50);
+  }
+
+  var tilføjTag = function (id) {
+    $(".concept-post").each(function(i) {
+      if($(this).find("h6")[0].id.slice(1) == id) {
+        $(this).find("a.icon-plus-sign").parent().append('<input type="search" id="tagaddbox" class="col_10" placeholder="tag du vil tilføje" />'); 
+        $("#tagaddbox").autocomplete({
+          source: availableTags,
+          messages: {
+            noResults: '',
+            results: function() {}
+          }
+        });
+        $('#tagaddbox').val('').trigger('focus');
+        $("#tagaddbox").on('keydown', function(ev) {
+          var t = $("#tagaddbox").val().toLowerCase();
+          if ((ev.which == 13) && (t !== "")){ 
+            var newTerm = true;
+            for (index = 0; index < availableTags.length; ++index) {
+              if (availableTags[index].toLowerCase() == t) {
+                newTerm = false;
+              }
+            }
+            if (newTerm == true) {
+              // add the tag to table tags
+              $.ajax({                                      
+                url: 'insertTag.php',       //the script to call to get data          
+                data: {name : $("#tagaddbox").val()},
+                complete: function()     //on recieve of reply
+                {
+                  tilføjTagTilBegreb($("#tagaddbox").val(), id);
+                }
+              });
+            } else { //tag is already in table tags
+              tilføjTagTilBegreb($("#tagaddbox").val(), id);
+            }
+          } else if (ev.which == 27) { //esc pressed - end it
+            $("#tagaddbox").remove();
+          }
+        });
+      }
+    });
+  }
+  
+  var tilføjTagTilBegreb = function (tagToAdd, id) {
+    var newConceptTerm = true;
+    for (index = 0; index < conceptTagsTable.length; ++index) {
+      if (conceptTagsTable[index].conceptid == id) {
+        if (tagNameFromId(conceptTagsTable[index].tagid).toLowerCase() == tagToAdd.toLowerCase()) {
+          newConceptTerm = false;
+        }
+      }
+    }
+    if (newConceptTerm == true) {
+      // add the tag to table concepttags
+      var thisTagId;
+      $.ajax({                                      
+        url: 'getTags.php',             //the script to call to get data          
+        data: "",                       //you can insert url argumnets here to pass to api.php
+        dataType: 'json',               //data format      
+        success: function(tagData)     //on recieve of reply
+        {
+          tagsTable = tagData;
+          for (index = 0; index < tagsTable.length; ++index) {
+            if (tagsTable[index].name.toLowerCase() == tagToAdd.toLowerCase()) {
+              thisTagId = tagsTable[index].id;
+            }
+          }
+          if (thisTagId != 0 && thisTagId !== undefined) {
+            //add tagid & conceptid to concepttags
+            $.ajax({                                      
+              url: 'insertConceptTag.php',       //the script to call to get data          
+              data: {conceptid : id, tagid : thisTagId},
+              complete: function() {
+                refresh();
+                $("#tagaddbox").remove();
+              }
+            });
+          } else {
+            console.log ("Error - it appears that the tag was not succesfully added to the table tags as expected?")
+          }
+        }
+      });
+    }
+  }
+
+  var fjernTag = function (tag, id) {
+    fjernTagFraBegreb(tag, id);
+  }
+  
+  var fjernTagFraBegreb = function (tag, id) {
+    if (confirm("fjern tagget " + tagNameFromId(tag) + " fra " + conceptNameFromId(id) + "?")) {
+      $.ajax({                                      
+        url: 'deleteConceptTag.php',       //the script to call to get data          
+        data: {tagid : tag, conceptid : id},
+        complete: function() {
+          // remove the tag from tags if no other references exist in concepttags
+          var noReferences = true;
+          for(var j=0; j<conceptTagsTable.length; j++) {
+            if ((conceptTagsTable[j].tagid == tag) && (conceptTagsTable[j].conceptid != id)) {
+              console.log("found remaining reference: " + conceptTagsTable[j].id);
+              noReferences = false;
+            }
+          }
+          if (noReferences) {//
+            sletTagFraTagsTabel(tag);
+          }
+          refresh();
+        }
+      });
+    }
+  }
+  
+  var sletTagFraTagsTabel = function (tag) {
+    $.ajax({                                      
+      url: 'deleteTag.php',       //the script to call to get data          
+      data: {id : tag},
+    });
+  }
+
+  
+  //
+  //type anywhere to search
+  //
+  $(document ).on( 'keydown', function(ev) {
+    var nodeName = ev.target.nodeName;
+
+    if ( 'INPUT' == nodeName || 'TEXTAREA' == nodeName || 'P' == nodeName || 'H6' == nodeName ) {
+        return;
+    }
+    $( '#searchbox' ).val('').trigger('focus');
+  } );
+  
+  
+  
+  //
+  //Enter to add new term
+  //
+  $("#searchbox").on('keydown', function(ev) {
+    var s = $("#searchbox").val();
+    if ((ev.which == 13) && (s !== "")){ 
+      var newTerm = true;
+      $(".concept-post").each(function(i) {
+        if ($(this).find("h6").text().search(new RegExp(s, "i")) > -1) {
+          newTerm = false;
+        }
+      });
+      if (newTerm == true) {
+        opret();
+      }
+    }
+  } );
+  
+  //
+  //triggers events when the search box or search tag box is changed
+  //
+  $('#searchbox').on('focus', function() {
+    var $this = $(this);
+    $this.data('before', $this.val());
+    return $this;
+  }).on('blur keyup paste input', function() {
+    var $this = $(this);
+    if ($this.data('before') !== $this.val()) {
+        $this.data('before', $this.val());
+        $this.trigger('change');
+    }
+    return $this;
+  }).on('change', function() {search();});
+  $('#tagsearchbox').on('focus', function() {
+    var $this = $(this);
+    $this.data('before', $this.val());
+    return $this;
+  }).on('blur keyup paste input', function() {
+    var $this = $(this);
+    if ($this.data('before') !== $this.val()) {
+        $this.data('before', $this.val());
+        $this.trigger('change');
+    }
+    return $this;
+  }).on('change', function() {search();});
+
+  
+  var search = function() {
+    var s = $("#searchbox").val().toLowerCase();
+    var ts = $("#tagsearchbox").val().toLowerCase();
+    $(".concept-post").each(function(i) {
+      var thisid = $(this).find("h6")[0].id.slice(1);
+      var thistags = "";
+      for (index = 0; index < conceptTagsTable.length; ++index) {
+        if (conceptTagsTable[index].conceptid == thisid) {
+          thistags += " " + tagNameFromId(conceptTagsTable[index].tagid);
+        }
+      }
+      if (
+        (($(this).find("h6").text().toLowerCase().indexOf(s) > -1) 
+        || ($(this).find("p").text().toLowerCase().indexOf(s) > -1)) 
+        && (thistags.toLowerCase().indexOf(ts) > -1))
+      {
+        //for each element in DB, hide if it doesn't have the searchterm in it's name (OR in its text) OR if it is excluded by tagfilter
+        $(this).css({'display':'block'});
+      } else {
+        $(this).css({'display':'none'});
+      }
+    });
+  }
+  
+  
+  //
+  //triggers events when text with contenteditable=true is changed (the edit function)
+  //
+  $('body').on('focus', '[contenteditable]', function() {
+    var $this = $(this);
+    $this.data('before', $this.html());
+    return $this;
+  }).on('blur keyup paste input', '[contenteditable]', function() {
+    var $this = $(this);
+    if ($this.data('before') !== $this.html()) {
+        $this.data('before', $this.html());
+        $this.trigger('change');
+    }
+    return $this;
+  }).on('change', '[contenteditable]', function() {edit($(this));});
+  
+  
+  //rediger begreb eller begrebsdefinition
+  var edit = function(changedObject) {
+    var type = changedObject.context.id.slice(0,1); //first char
+    var id = changedObject.context.id.slice(1); //all but the first char
+    if (type == "h") {
+      $.ajax({                                      
+        url: 'updateConceptName.php',       //the script to call to get data          
+        data: {name : $("#h" + id).text(), id : id}
+      });
+    } else if (type == "p") {
+      $.ajax({                                      
+        url: 'updateConceptDescription.php',       //the script to call to get data          
+        data: {description : $("#p" + id).text(), id : id}
+      });
+    } else {
+      console.log ("Error - unknown type in gemRettelser");
+    }
+  }
+
+  var slet = function(id) {
+    $(".concept-post").each(function(i) {
+      if ($(this).find("h6")[0].id.slice(1) == id) {
+        var begreb = $(this).find("h6").text() + "?";
+        if (confirm("Slet begrebet " + begreb)) {
+          $(this).hide(250, function() {
+            if ($(this).find("h6").text() == "Nyt Begreb") {
+              $("#searchbox").text("");
+            }
+            $.ajax({                                      
+              url: 'deleteConcept.php',       //the script to call to get data          
+              data: {id : id},
+              complete: function() {
+                refresh();
+              }
+            });
+          });
+        }
+      }
+    });
+  }
+  
+  //opret nyt begreb
+  var opret = function() {
+    var name = $('#searchbox').val();
+    if (name == "") {
+      $('#searchbox').val("Nyt begreb");
+    }
+    var def = "definitionen af det nye begreb...";
+    if (true) { //search box empty - opret tomt begreb
+    } else {
+    }
+    
+     $.ajax({                                      
+      url: 'insertConcept.php',       //the script to call to get data          
+      data: {name : name},
+      complete: function() {
+        $("#tagsearchbox").val(""); //rens filterfeltet så det nye begreb kan vises
+        refresh();
+      }
+    });
+  }
+  
+  //Tilføj begreb til 'min begrebsliste'
+  var tilføj = function(id) {
+    var newTerm = true;
+    var concept;
+    $(".concept-post").each(function(i) {
+      if ($(this).find("h6")[0].id.slice(1) == id) {
+        concept = $(this).find("h6").text();
+      }
+    });
+    $(".list-post").each(function(i) {
+      if ($(this).text().indexOf(concept) > -1) {
+        newTerm = false;
+      }
+    });
+    if (newTerm == true) {
+      var listOutput = '<div id="h' + id + '" class="col_12 visible list-post" style="cursor: move; padding: 2px 2px; margin: 2px 2px;"><i title="Fjern begrebet fra begrebslisten" style="opacity: 0.5; color: red; cursor: pointer;" class="icon-arrow-left" onClick="fjern(' + id + ')"></i> ' + concept + '</div>';
+      $("#myList").html($("#myList").html() + listOutput); 
+    }
+    if ($("#myList").parent().is(":visible")) {
+    } else {
+      $("#myList").parent().show(500);
+    }
+    opdaterBegrebsliste();
+  }
+  
+  var opdaterBegrebsliste = function () {
+    jQuery('a#eksporterListe').colorbox({html : eksportTekst(), maxWidth : "700px"});
+    jQuery('a#eksporterTabel').colorbox({html : eksportTabel(), maxWidth : "700px"});
+  }
+  
+  //Fjern begreb fra 'min begrebsliste'
+  var fjern = function(id) {
+    $(".list-post").each(function(i) {
+      if ($(this)[0].id.slice(1) == id) {
+        $(this).hide(250, function() {
+          $(this).remove();
+          if ($(".list-post").length < 1) {
+            $("#myList").parent().hide(500);
+          }
+          opdaterBegrebsliste();
+        });
+      }
+    });
+  }
+  
+  var eksportTabel = function() {
+    var tekst = "";
+    $("#myList").children().each(function(i) {
+      var thisID = $(this)[0].id.slice(1);
+      var thisName = $(this).text();
+      var thisDescription = "";
+      $(".concept-post").each(function(i) {
+        if ($(this).find("p")[0].id.slice(1) == thisID) {
+          thisDescription = $(this).find("p").text();
+        }
+      });
+      tekst += "<tr><td><b>" + thisName + "</b></td>";
+      tekst += "<td>" + thisDescription + "</td>";
+    });
+    tekst = "<table style='max-width: 650px;'>" + tekst + "</table>"
+    return tekst;
+  }
+  
+  var eksportTekst = function() {
+    var tekst = "";
+    $(".list-post").each(function(i) {
+      var thisID = $(this)[0].id.slice(1);
+      var thisName = $(this).text();
+      var thisDescription = "";
+      $(".concept-post").each(function(i) {
+        if ($(this).find("p")[0].id.slice(1) == thisID) {
+          thisDescription = $(this).find("p").text();
+        }
+      });
+      tekst += "<h6>" + thisName + "</h6>";
+      tekst += "<p>" + thisDescription + "</p>";
+    });
+    return tekst;
+  }
+
+</script>
+
+</body>
+</html>
