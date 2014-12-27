@@ -6,7 +6,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta name="description" content="Database over faglige begreber" />
-	
+  <meta name="google-signin-clientid" content="307014362498-50ima1junno67dvj6ebviug5mfq8sbca.apps.googleusercontent.com" />
+  <meta name="google-signin-scope" content="email" />
+  <meta name="google-signin-cookiepolicy" content="single_host_origin" />
+  <meta name="google-signin-callback" content="signinCallback" />
+
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="css/colorbox.css" media="all" />
 	<link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" />
@@ -20,32 +24,46 @@
 	<script type="text/javascript" src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="js/kickstart.js"></script>
 	<script type="text/javascript" src="js/jquery.colorbox-min.js"></script>
+  <script src="https://apis.google.com/js/client:platform.js?onload=render" async defer></script>
 </head>
 <body onload="initialize ()">
 
+<!-- <div id="header">Tobias arbejder for øjeblikket på serveren - siden kan derfor være ustabil</div> -->
 
 <div class="grid">
-	<div class="col_9">
-		<input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette" />
-    <button title="Opret nyt begreb i databasen" class="small green icon-plus" onclick="opret()" style="top: 4px;"> Opret</button>
-    <button title="Opdatér" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 4px;"></button>
-    <span style="margin-left: 1.25em; vertical-align: middle;"><div title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
-    <a id="comment" title="Kommentér på udviklingen af begrebsbasen" class="icon-comments icon-large" style="float: right; color: #999; cursor: pointer;" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a>
-    <div class="col_12">
-      <span id="sortering" style="opacity: 0.5; font-family: verdana, arial; font-size: 0.64em;">Sortér begreber efter:</span>
-      <button id="SortAbc" onClick="sort('abc')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter alfabetisk med A øverst"> Abc</a>
-      <button id="SortCba" onClick="sort('cba')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter alfabetisk med A nederst"> Åøæ</a>
-      <button id="Sort123" onClick="sort('123')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter med nyest opdaterede begreb øverst"> 1sek</a>
-      <button id="Sort321" onClick="sort('321')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter med nyest opdaterede begreb nederst"> 99år</a>
-    </div>
-    <div id="searchresults" class="col_12"></div> <!-- End list of terms -->
-	</div> <!-- End left column -->
-	<div class="col_3" style="padding: 10px; opacity: 1;">
-		<H5 style="margin: 0;">Min begrebsliste</H5>
-	  <div id="myList" class="col_12"></div>
-		<a id="eksporterListe" title="Eksportér begrebslisten som liste" class="icon-download" style="margin-bottom: .5em; cursor: pointer; float: right;"> Eksportér som liste <i class="icon-list" style="cursor: pointer"></i></a>
-		<a id="eksporterTabel" title="Eksportér begrebslisten som tabel" class="icon-download" style="cursor: pointer; float: right;"> Eksportér som tabel <i class="icon-table" style="cursor: pointer"></i></a>
-	</div> <!-- End right column -->
+	<div class="col_12" style="margin: 0;"> <!--top row-->
+    <div class="col_9">
+  		<input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette" />
+      <button id="opretButton" title="Opret nyt begreb i databasen" class="small green icon-plus" onclick="opret()" style="top: 3px;"> Opret</button>
+      <button id="opdaterButton" title="Opdatér" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 3px;"></button>
+      <span style="margin-left: 1.25em; vertical-align: middle;"><div title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
+      <a id="comment" title="Kommentér på udviklingen af begrebsbasen" class="icon-comments icon-large" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a>
+      <div class="col_12" style="margin-bottom: 0;">
+        <span id="sortering" style="opacity: 0.5; font-family: verdana, arial; font-size: 0.64em;">Sortér begreber efter:</span>
+        <button id="SortAbc" onClick="sort('abc')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter alfabetisk med A øverst"> Abc</a>
+        <button id="SortCba" onClick="sort('cba')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter alfabetisk med A nederst"> Åøæ</a>
+        <button id="Sort123" onClick="sort('123')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter med nyest opdaterede begreb øverst"> 1sek</a>
+        <button id="Sort321" onClick="sort('321')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter med nyest opdaterede begreb nederst"> 99år</a>
+      </div>
+  	</div><!-- End left column -->
+    <div class="col_3" style="padding: 10px; opacity: 1;">
+      <span id="status"><span class='icon-warning-sign' style='color:#040404;' title='Du er ikke logget på og har ikke adgang til at redigere i databasen. Log på med en @gg-drev.dk-konto (eller bed Tobias om adgang) for at redigere'></span>&nbsp;</span>
+      <button id="signin" title="log på for at redigere begrebsbasen" style="display: none;" class="small green">log på</button>
+      <span id="signout" style="display: none;" onClick="signOut()" title="log af"><i style="color: red;" class="icon-signout"></i></span>
+    </div><!-- End right column -->
+  </div><!--End header row-->
+
+  <div class="col_12" style="margin: 0;"> <!--bottom row-->
+    <div class="col_9">
+      <div id="searchresults" class="col_12"></div> <!-- End list of terms -->
+    </div><!-- End left column -->
+    <div class="col_3"  style="display: none; padding: 10px; opacity: 1;">
+      <H6 style="margin: 0;">Min begrebsliste</H5>
+  	  <div id="myList" class="col_12"></div>
+  		<a id="eksporterListe" title="Eksportér begrebslisten som liste" class="icon-download" style="margin-bottom: .5em; cursor: pointer; float: right;"> Eksportér som liste <i class="icon-list" style="cursor: pointer"></i></a>
+  		<a id="eksporterTabel" title="Eksportér begrebslisten som tabel" class="icon-download" style="cursor: pointer; float: right;"> Eksportér som tabel <i class="icon-table" style="cursor: pointer"></i></a>
+  	</div> <!-- End right column -->
+  </div><!--End content row-->
 </div> <!-- End Grid -->
 
 <!-- ===================================== START FOOTER ===================================== -->
@@ -60,11 +78,9 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   var tagsTable;
   var availableTags = [];
   var conceptTagsTable;
-  
+
   var initialize = function () {
-    sort("abc");
-    refresh();
-    $("#myList").parent().hide();
+    disableEditing(); //redigeringsmuligheder aktiveres kun ved login
     $("#myList").sortable({
       cursor: "move",
       update : function(event, ui) {
@@ -72,8 +88,92 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       }
     });
     $("#myList").disableSelection();
+    sort("abc");
+  }
+
+  /* Executed when the (Google) APIs finish loading */
+  function render() {
+    // Attach a click listener to a button to trigger the flow.
+    var signinButton = document.getElementById('signin');
+    // Load the Google+ API
+    gapi.client.load('plus', 'v1').then(function() {
+      signinButton.addEventListener('click', function() {
+        gapi.auth.signIn(); // Will use page level configuration
+      });
+      document.getElementById('signin').setAttribute('style', 'display: inline'); //unhide
+    });
+  }
+
+  function signinCallback(authResult) {
+    if (authResult['status']['signed_in']) {
+      // Update the app to reflect a signed in user
+      makeAPICall();      
+    } else {
+      // Update the app to reflect a signed out user
+      // Possible error values:
+      //   "user_signed_out" - User is signed-out
+      //   "access_denied" - User denied access to your app
+      //   "immediate_failed" - Could not automatically log in the user
+      //console.log('Sign-in state: ' + authResult['error']);
+    }
+  }
+
+  var makeAPICall = function () {
+    // Assemble the API request
+    var request = gapi.client.plus.people.get({userId: 'me'}).execute(handleEmailResponse);
   }
   
+  var userEmail; 
+  var userEmailAuthorized; 
+  var handleEmailResponse = function (resp) {
+    for (var i=0; i < resp.emails.length; i++) {
+      if (resp.emails[i].type === 'account') userEmail = resp.emails[i].value;
+    }
+    document.getElementById('status').innerHTML = userEmail; //resp.displayName + ", " + userEmail;
+    //console.log(resp);
+    //test if it is a teacher?
+    if ((userEmail.substring(0,2) == "gg") && (userEmail.substring(5,16) == "@gg-drev.dk")) {
+      //document.getElementById('status').innerHTML += " (" + userEmail.substring(2,5).toUpperCase() + ")";
+      document.getElementById('status').innerHTML = "<span class='icon-ok-sign' style='color:green;' title='log-in godkendt - fuld adgang til at redigere i begrebsbasen'></span>&nbsp;" + "<span class='noselect' title='" + resp.displayName + "'>" + document.getElementById('status').innerHTML + "</span>";
+      document.getElementById('signout').setAttribute('style', 'display: inline');
+      document.getElementById('signin').setAttribute('style', 'display: none');
+      if (userEmailAuthorized !== true) {
+        userEmailAuthorized = true;
+        enableEditing();
+        refresh();
+      }
+    } else {
+      document.getElementById('status').innerHTML = "<span class='icon-warning-sign' style='color:#040404;' title='Du er logget på - men din konto har ikke adgang til at redigere i begrebsbasen. Log på med en @gg-drev.dk-konto (eller bed Tobias om adgang) for at redigere'></span>&nbsp;" + "<span class='noselect' title='" + resp.displayName + "'>" + document.getElementById('status').innerHTML + "</span>";
+      document.getElementById('signout').setAttribute('style', 'display: inline');
+      document.getElementById('signin').setAttribute('style', 'display: none');
+      if (userEmailAuthorized !== false) {
+        userEmailAuthorized = false;
+        disableEditing();
+        refresh();
+      }
+    }
+  }
+
+  var signOut = function () {
+    document.getElementById('signin').setAttribute('style', 'display: inline');
+    document.getElementById('signout').setAttribute('style', 'display: none');
+    document.getElementById('status').innerHTML = "<span class='icon-warning-sign' style='color:#040404;' title='Du er ikke logget på og har ikke adgang til at redigere i databasen. Log på med en @gg-drev.dk-konto (eller bed Tobias om adgang) for at redigere'></span>&nbsp;";
+    gapi.auth.signOut();
+    if (userEmailAuthorized !== false) {
+        userEmailAuthorized = false;
+        disableEditing();
+        refresh();
+    }
+  }
+
+  var enableEditing = function() {
+    $('button#opretButton').show(250);
+  }
+  
+  var disableEditing = function() {
+    $('button#opretButton').hide(250);
+  }
+
   var refresh = function() {
     $('#searchresults').html("<img src='css/images/loading.gif' />");
     setTimeout(function() {
@@ -167,8 +267,9 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                     var description = conceptsTable[j].description;    //get description
                     var created = conceptsTable[j].created;        //get creation timestamp
                     var updated = conceptsTable[j].updated        //get updated timestamp
+                    if (userEmailAuthorized) {
                     searchOutput += '<div class="col_12 visible concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
-                      "<H6 id='h" + id + "' contenteditable='true' style='margin: 5px 0 5px 0;'>" + name + "</H6>" + 
+                      "<H6 class='concept' id='h" + id + "' contenteditable='true' style='margin: 5px 0 5px 0;'>" + name + "</H6>" + 
                       "<p id='p" + id + "' contenteditable='true'>" + description + "</p>" +
                       tagsHTML(id) +
                       updatedHTML(id) + 
@@ -176,6 +277,16 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                       '<span title="Tilføj begrebet til din begrebsliste" class="icon-arrow-right" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span>&nbsp;' +
                       '<span title="Slet begrebet fra databasen" class="icon-remove" style="cursor: pointer; color: red;" onClick="slet(' + id + ')"></span><br />' +
                       '</div></div>';
+                    } else {
+                      searchOutput += '<div class="col_12 visible concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
+                      "<H6 class='concept' id='h" + id + "' contenteditable='false' style='margin: 5px 0 5px 0;'>" + name + "</H6>" + 
+                      "<p id='p" + id + "' contenteditable='false'>" + description + "</p>" +
+                      tagsHTML(id) +
+                      updatedHTML(id) + 
+                      '</div><div class="col_1" style="text-align: right;">' + 
+                      '<span title="Tilføj begrebet til din begrebsliste" class="icon-arrow-right" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span>&nbsp;' +
+                      '</div></div>';
+                    }
                   }
         
                 //--------------------------------------------------------------------
@@ -266,14 +377,26 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   }
 
   var tagsHTML = function(id) {
-    var t = '<div class="tags"><i title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></i> <a title="Tilføj tag" class="icon-plus-sign" style="opacity: .75; margin-left: .5em; color: green; cursor: pointer;" onClick="tilføjTag(' + id + ')"></a>';     
-    for (index = 0; index < conceptTagsTable.length; ++index) {
-      if (conceptTagsTable[index].conceptid == id) {
-        var tag = tagNameFromId(conceptTagsTable[index].tagid);
-        t += ' <a title="Fjern tagget ' + tag + '" class="icon-remove-sign" style="opacity: .75; margin-left: .5em; color: red; cursor: pointer;" onClick="fjernTag(' + conceptTagsTable[index].tagid + ', ' + id + ')"></a> <span style="opacity: 0.75; color: #06f; cursor: pointer;" onClick="tagFilter(' + conceptTagsTable[index].tagid + ')">' + tag + '</span>';
+    var t;
+    if (userEmailAuthorized) {
+      t = '<div class="tags"><i title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></i> <a title="Tilføj tag" class="icon-plus-sign" style="opacity: .75; margin-left: .5em; color: green; cursor: pointer;" onClick="tilføjTag(' + id + ')"></a>';     
+      for (index = 0; index < conceptTagsTable.length; ++index) {
+        if (conceptTagsTable[index].conceptid == id) {
+          var tag = tagNameFromId(conceptTagsTable[index].tagid);
+          t += ' <a title="Fjern tagget ' + tag + '" class="icon-remove-sign" style="opacity: .75; margin-left: .5em; color: red; cursor: pointer;" onClick="fjernTag(' + conceptTagsTable[index].tagid + ', ' + id + ')"></a>&nbsp;<span style="opacity: 0.75; color: #06f; cursor: pointer;" onClick="tagFilter(' + conceptTagsTable[index].tagid + ')">' + tag + '</span>';
+        }
       }
+      t += "</div>";
+    } else {
+      t = '<div class="tags">';     
+      for (index = 0; index < conceptTagsTable.length; ++index) {
+        if (conceptTagsTable[index].conceptid == id) {
+          var tag = tagNameFromId(conceptTagsTable[index].tagid);
+          t += ' <i title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></i>&nbsp;' + '<span style="opacity: 0.75; color: #06f; cursor: pointer;" onClick="tagFilter(' + conceptTagsTable[index].tagid + ')">' + tag + '</span>';
+        }
+      }
+      t += "</div>";
     }
-    t += "</div>";
     return t;
   }
   
@@ -304,7 +427,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
 
   var tilføjTag = function (id) {
     $(".concept-post").each(function(i) {
-      if($(this).find("h6")[0].id.slice(1) == id) {
+      if($(this).find("h6.concept")[0].id.slice(1) == id) {
         $(this).find("a.icon-plus-sign").parent().append('<input type="search" id="tagaddbox" class="col_10" placeholder="tag du vil tilføje" />'); 
         $("#tagaddbox").autocomplete({
           source: availableTags,
@@ -426,9 +549,12 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   //
   $(document ).on( 'keydown', function(ev) {
     var nodeName = ev.target.nodeName;
-
-    if ( 'INPUT' == nodeName || 'TEXTAREA' == nodeName || 'P' == nodeName || 'H6' == nodeName ) {
+    if ( 'INPUT' == nodeName || 'TEXTAREA' == nodeName || 'P' == nodeName || 'H6' == nodeName || 'BUTTON' == nodeName) {
         return;
+    } else if (ev.ctrlKey || ev.shiftKey || ev.keyCode == 33 || ev.keyCode == 34 || ev.keyCode == 35 || ev.keyCode == 36) { //allow ctrl, shift, end, home, pgup and pgdown
+        return;
+    } else {
+      //console.log(ev.keyCode);
     }
     $( '#searchbox' ).val('').trigger('focus');
   } );
@@ -440,16 +566,18 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   //
   $("#searchbox").on('keydown', function(ev) {
     var s = $("#searchbox").val();
-    if ((ev.which == 13) && (s !== "")){ 
+    if ((ev.keyCode == 13) && (s !== "")){ 
       var newTerm = true;
       $(".concept-post").each(function(i) {
-        if ($(this).find("h6").text().search(new RegExp(s, "i")) > -1) {
+        if ($(this).find("h6.concept").text().search(new RegExp(s, "i")) > -1) {
           newTerm = false;
         }
       });
       if (newTerm == true) {
         opret();
       }
+    } else {
+      //console.log(ev.keyCode);
     }
   } );
   
@@ -486,7 +614,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     var s = $("#searchbox").val().toLowerCase();
     var ts = $("#tagsearchbox").val().toLowerCase();
     $(".concept-post").each(function(i) {
-      var thisid = $(this).find("h6")[0].id.slice(1);
+      var thisid = $(this).find("h6.concept")[0].id.slice(1);
       var thistags = "";
       for (index = 0; index < conceptTagsTable.length; ++index) {
         if (conceptTagsTable[index].conceptid == thisid) {
@@ -494,7 +622,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
         }
       }
       if (
-        (($(this).find("h6").text().toLowerCase().indexOf(s) > -1) 
+        (($(this).find("h6.concept").text().toLowerCase().indexOf(s) > -1) 
         || ($(this).find("p").text().toLowerCase().indexOf(s) > -1)) 
         && (thistags.toLowerCase().indexOf(ts) > -1))
       {
@@ -545,11 +673,11 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
 
   var slet = function(id) {
     $(".concept-post").each(function(i) {
-      if ($(this).find("h6")[0].id.slice(1) == id) {
-        var begreb = $(this).find("h6").text() + "?";
+      if ($(this).find("h6.concept")[0].id.slice(1) == id) {
+        var begreb = $(this).find("h6.concept").text() + "?";
         if (confirm("Slet begrebet " + begreb)) {
           $(this).hide(250, function() {
-            if ($(this).find("h6").text() == "Nyt Begreb") {
+            if ($(this).find("h6.concept").text() == "Nyt Begreb") {
               $("#searchbox").text("");
             }
             $.ajax({                                      
@@ -591,8 +719,8 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     var newTerm = true;
     var concept;
     $(".concept-post").each(function(i) {
-      if ($(this).find("h6")[0].id.slice(1) == id) {
-        concept = $(this).find("h6").text();
+      if ($(this).find("h6.concept")[0].id.slice(1) == id) {
+        concept = $(this).find("h6.concept").text();
       }
     });
     $(".list-post").each(function(i) {

@@ -1,6 +1,7 @@
 body {
   font-family: 'Droid Serif', Lora, Georgia, Serif;
   background:#fff;
+  margin: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -23,9 +24,41 @@ div.tags {
   float: right;
 }
 
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
 div.updated {
 	margin-top: 1em;
 	font-size: 0.8em;
+}
+
+button.signin {
+  display: inline;
+}
+
+#signout {
+  cursor: pointer;
+}
+
+#status {
+  font-family: Verdana, Arial, Sans-serif;
+  font-size: 0.8em;
+  color: #404040;
+}
+
+#comment {
+  float: right;
+  color: #999;
+  cursor: pointer;
+  margin-top: 8px;
+  margin-right: 21px;
 }
 
 #cboxClose {
@@ -39,7 +72,18 @@ table tr td {
   border-bottom-width: 1px;
 }
 
-#footer{
+#header {
+  font-family: verdana, arial, sans-serif; 
+  text-align:center;
+  padding:20px;
+  margin:0;
+  border-bottom:1px solid #ddd;
+  font-size:0.8em;
+  background: yellow;  
+  width: 100%;
+}
+
+#footer {
   font-family: verdana, arial, sans-serif; 
   text-align:center;
   padding:20px;
