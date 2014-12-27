@@ -18,10 +18,10 @@ p {
   margin-bottom: .1em;
 }
 
-*[class*="col_"].concept-post {
-background:#fff;
-border:1px solid #CCCCCC;
-border-radius: 5px;
+*[class*="col_"].concept-post, *[class*="col_"].list-post {
+  background:#fff;
+  border:1px solid #CCCCCC;
+  border-radius: 5px;
 }
 
 div.tags {
