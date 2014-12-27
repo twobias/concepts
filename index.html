@@ -33,7 +33,7 @@
 <div class="grid">
 	<div class="col_12" style="margin: 0;"> <!--top row-->
     <div class="col_9">
-  		<input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette" />
+  		<input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette"/>
       <button id="opretButton" title="Opret nyt begreb i databasen" class="small green icon-plus" onclick="opret()" style="top: 3px;"> Opret</button>
       <button id="opdaterButton" title="Opdatér" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 3px;"></button>
       <span style="margin-left: 1.25em; vertical-align: middle;"><div title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
@@ -566,7 +566,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   //
   $("#searchbox").on('keydown', function(ev) {
     var s = $("#searchbox").val();
-    if ((ev.keyCode == 13) && (s !== "")){ 
+    if ((ev.keyCode == 13) && (s !== "") && userEmailAuthorized){ 
       var newTerm = true;
       $(".concept-post").each(function(i) {
         if ($(this).find("h6.concept").text().search(new RegExp(s, "i")) > -1) {
