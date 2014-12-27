@@ -39,7 +39,7 @@
       <span style="margin-left: 1.25em; vertical-align: middle;"><div title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
       <a id="comment" title="Kommentér på udviklingen af begrebsbasen" class="icon-comments icon-large" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a>
       <div class="col_12" style="margin-bottom: 0;">
-        <span id="sortering" style="opacity: 0.5; font-family: verdana, arial; font-size: 0.64em;">Sortér begreber efter:</span>
+        <span id="sortering" style="opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
         <button id="SortAbc" onClick="sort('abc')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter alfabetisk med A øverst"> Abc</a>
         <button id="SortCba" onClick="sort('cba')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter alfabetisk med A nederst"> Åøæ</a>
         <button id="Sort123" onClick="sort('123')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter med nyest opdaterede begreb øverst"> 1sek</a>
@@ -47,7 +47,7 @@
       </div>
   	</div><!-- End left column -->
     <div class="col_3" style="padding: 10px; opacity: 1;">
-      <span id="status"><span class='icon-warning-sign' style='color:#040404;' title='Du er ikke logget på og har ikke adgang til at redigere i databasen. Log på med en @gg-drev.dk-konto (eller bed Tobias om adgang) for at redigere'></span>&nbsp;</span>
+      <span id="status"></span>
       <button id="signin" title="log på for at redigere begrebsbasen" style="display: none;" class="small green">log på</button>
       <span id="signout" style="display: none;" onClick="signOut()" title="log af"><i style="color: red;" class="icon-signout"></i></span>
     </div><!-- End right column -->
@@ -75,6 +75,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
 <script language="javascript" type="text/javascript">
 
   var conceptsTable;
+  var userTable;
   var tagsTable;
   var availableTags = [];
   var conceptTagsTable;
@@ -124,6 +125,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   }
   
   var userEmail; 
+  var userId;
   var userEmailAuthorized; 
   var handleEmailResponse = function (resp) {
     for (var i=0; i < resp.emails.length; i++) {
@@ -131,33 +133,54 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     }
     document.getElementById('status').innerHTML = userEmail; //resp.displayName + ", " + userEmail;
     //console.log(resp);
-    //test if it is a teacher?
-    if ((userEmail.substring(0,2) == "gg") && (userEmail.substring(5,16) == "@gg-drev.dk")) {
-      //document.getElementById('status').innerHTML += " (" + userEmail.substring(2,5).toUpperCase() + ")";
-      document.getElementById('status').innerHTML = "<span class='icon-ok-sign' style='color:green;' title='log-in godkendt - fuld adgang til at redigere i begrebsbasen'></span>&nbsp;" + "<span class='noselect' title='" + resp.displayName + "'>" + document.getElementById('status').innerHTML + "</span>";
-      document.getElementById('signout').setAttribute('style', 'display: inline');
-      document.getElementById('signin').setAttribute('style', 'display: none');
-      if (userEmailAuthorized !== true) {
-        userEmailAuthorized = true;
-        enableEditing();
-        refresh();
+
+    //test if user exists in users table
+    $.ajax({                                      
+    url: 'getUser.php',             //the script to call to get data          
+    data: "email=" + userEmail     //you can insert url argumnets here to pass to api.php
+        + "&name=" + resp.displayName,
+    dataType: 'json',               //data format      
+    success: function(dbData)       //on recieve of reply
+      {
+        var searchOutput = "";
+        userTable = dbData;
+
+        for(var j=0; j<userTable.length; j++) {
+          userId = userTable[j].id; //global var - used in later requests
+          var name = userTable[j].name;
+          var firstlogin = userTable[j].firstlogin;  
+          var lastlogin = userTable[j].lastlogin;
+          var canEdit = userTable[j].canedit;
+        }
+
+        if (canEdit == 1) {
+          //document.getElementById('status').innerHTML += " (" + userEmail.substring(2,5).toUpperCase() + ")";
+          document.getElementById('status').innerHTML = "<span class='icon-ok-sign' style='color:green;' title='log-in godkendt - fuld adgang til at redigere i begrebsbasen'></span>&nbsp;" + "<span class='noselect' title='" + resp.displayName + "'>" + document.getElementById('status').innerHTML + "</span>";
+          document.getElementById('signout').setAttribute('style', 'display: inline');
+          document.getElementById('signin').setAttribute('style', 'display: none');
+          if (userEmailAuthorized !== true) {
+            userEmailAuthorized = true;
+            enableEditing();
+            refresh();
+          }
+        } else {
+          document.getElementById('status').innerHTML = "<span class='icon-warning-sign' style='color:#FFCC00;' title='Du er logget på - men din konto har ikke adgang til at redigere. Log på med din @gg-drev.dk-konto eller bed Tobias om adgang med anden konto'></span>&nbsp;" + "<span class='noselect' title='" + resp.displayName + "'>" + document.getElementById('status').innerHTML + "</span>";
+          document.getElementById('signout').setAttribute('style', 'display: inline');
+          document.getElementById('signin').setAttribute('style', 'display: none');
+          if (userEmailAuthorized !== false) {
+            userEmailAuthorized = false;
+            disableEditing();
+            refresh();
+          }
+        }
       }
-    } else {
-      document.getElementById('status').innerHTML = "<span class='icon-warning-sign' style='color:#040404;' title='Du er logget på - men din konto har ikke adgang til at redigere i begrebsbasen. Log på med en @gg-drev.dk-konto (eller bed Tobias om adgang) for at redigere'></span>&nbsp;" + "<span class='noselect' title='" + resp.displayName + "'>" + document.getElementById('status').innerHTML + "</span>";
-      document.getElementById('signout').setAttribute('style', 'display: inline');
-      document.getElementById('signin').setAttribute('style', 'display: none');
-      if (userEmailAuthorized !== false) {
-        userEmailAuthorized = false;
-        disableEditing();
-        refresh();
-      }
-    }
+    });
   }
 
   var signOut = function () {
     document.getElementById('signin').setAttribute('style', 'display: inline');
     document.getElementById('signout').setAttribute('style', 'display: none');
-    document.getElementById('status').innerHTML = "<span class='icon-warning-sign' style='color:#040404;' title='Du er ikke logget på og har ikke adgang til at redigere i databasen. Log på med en @gg-drev.dk-konto (eller bed Tobias om adgang) for at redigere'></span>&nbsp;";
+    document.getElementById('status').innerHTML = "";
     gapi.auth.signOut();
     if (userEmailAuthorized !== false) {
         userEmailAuthorized = false;
@@ -267,8 +290,9 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                     var description = conceptsTable[j].description;    //get description
                     var created = conceptsTable[j].created;        //get creation timestamp
                     var updated = conceptsTable[j].updated        //get updated timestamp
+                    //var updateduserid = conceptsTable[j].updateduserid //get id of last user to update
                     if (userEmailAuthorized) {
-                    searchOutput += '<div class="col_12 visible concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
+                      searchOutput += '<div class="col_12 visible concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
                       "<H6 class='concept' id='h" + id + "' contenteditable='true' style='margin: 5px 0 5px 0;'>" + name + "</H6>" + 
                       "<p id='p" + id + "' contenteditable='true'>" + description + "</p>" +
                       tagsHTML(id) +
@@ -303,6 +327,18 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     });
   }; 
 
+  var userNameFromId = function (id) {
+    if (userTable !== undefined) {
+      for(var j=0; j<userTable.length; j++) {
+        if (userTable[j].id == id) {
+          return userTable[j].name;
+        }
+      }
+    } else {
+      return "no usertable yet...";
+    }
+  }
+
   var sortByNameAbc = function (a, b) {
     var aName = a.name.toLowerCase();
     var bName = b.name.toLowerCase(); 
@@ -336,14 +372,20 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     return new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
   }
 
-  var updatedHTML = function(id) {
+  var updatedHTML = function(id, lastupdateduserid) {
     var t = '<div class="updated col_6" style="opacity: 0.5"><i title="sidst opdateret" class="icon-time icon-small"></i> ';     
     for (index = 0; index < conceptsTable.length; ++index) {
       if (conceptsTable[index].id == id) {
-        if (conceptsTable[index].updated !== "0000-00-00 00:00:00") {
-          t += "opdateret for " + timeSince(timestampToDate(conceptsTable[index].updated)) + " siden af anonym";
+        var updater = "";
+        if (conceptsTable[index].updateduserid == 0) {
+          updater = "anonym";
         } else {
-          t += "opdateret for " + timeSince(timestampToDate(conceptsTable[index].created)) + " siden af anonym";
+          updater = userNameFromId(conceptsTable[index].updateduserid);
+        }
+        if (conceptsTable[index].updated !== "0000-00-00 00:00:00") {
+          t += "opdateret for " + timeSince(timestampToDate(conceptsTable[index].updated)) + " siden af " + updater;
+        } else {
+          t += "opdateret for " + timeSince(timestampToDate(conceptsTable[index].created)) + " siden af " + updater;
         }
       }
     }
@@ -659,12 +701,12 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     if (type == "h") {
       $.ajax({                                      
         url: 'updateConceptName.php',       //the script to call to get data          
-        data: {name : $("#h" + id).text(), id : id}
+        data: {name : $("#h" + id).text(), id : id, uid : userId}
       });
     } else if (type == "p") {
       $.ajax({                                      
         url: 'updateConceptDescription.php',       //the script to call to get data          
-        data: {description : $("#p" + id).text(), id : id}
+        data: {description : $("#p" + id).text(), id : id, uid : userId}
       });
     } else {
       console.log ("Error - unknown type in gemRettelser");
@@ -682,7 +724,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
             }
             $.ajax({                                      
               url: 'deleteConcept.php',       //the script to call to get data          
-              data: {id : id},
+              data: {id : id, uid : userId},
               complete: function() {
                 refresh();
               }
@@ -706,7 +748,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     
      $.ajax({                                      
       url: 'insertConcept.php',       //the script to call to get data          
-      data: {name : name},
+      data: "name="+name+"&uid="+userId,
       complete: function() {
         $("#tagsearchbox").val(""); //rens filterfeltet så det nye begreb kan vises
         refresh();
