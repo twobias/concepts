@@ -29,14 +29,14 @@
 		<input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette" />
     <button title="Opret nyt begreb i databasen" class="small green icon-plus" onclick="opret()" style="top: 4px;"> Opret</button>
     <button title="Opdatér" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 4px;"></button>
-    <i title="Tags" class="icon-tags" style="opacity: 0.5; color: #06f; margin-left: 2em;"></i><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
+    <span style="margin-left: 1.25em; vertical-align: middle;"><div title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
     <a id="comment" title="Kommentér på udviklingen af begrebsbasen" class="icon-comments icon-large" style="float: right; color: #999; cursor: pointer;" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a>
     <div class="col_12">
-      <span id="sortering" style="opacity: 0.5; font-family: verdana, arial; font-size: 0.7em;">Sortér begreber efter:</span>
-      <button id="SortAbc" onClick="sort('abc')" class="small" style="cursor: pointer; font-size: 0.5em;" title="Sorter alfabetisk med A øverst"> Abc</a>
-      <button id="SortCba" onClick="sort('cba')" class="small" style="cursor: pointer; font-size: 0.5em;" title="Sorter alfabetisk med A nederst"> Åøæ</a>
-      <button id="Sort123" onClick="sort('123')" class="small" style="cursor: pointer; font-size: 0.5em;" title="Sorter med nyest opdaterede begreb øverst"> 1sek</a>
-      <button id="Sort321" onClick="sort('321')" class="small" style="cursor: pointer; font-size: 0.5em;" title="Sorter med nyest opdaterede begreb nederst"> 99år</a>
+      <span id="sortering" style="opacity: 0.5; font-family: verdana, arial; font-size: 0.64em;">Sortér begreber efter:</span>
+      <button id="SortAbc" onClick="sort('abc')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter alfabetisk med A øverst"> Abc</a>
+      <button id="SortCba" onClick="sort('cba')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter alfabetisk med A nederst"> Åøæ</a>
+      <button id="Sort123" onClick="sort('123')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter med nyest opdaterede begreb øverst"> 1sek</a>
+      <button id="Sort321" onClick="sort('321')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter med nyest opdaterede begreb nederst"> 99år</a>
     </div>
     <div id="searchresults" class="col_12"></div> <!-- End list of terms -->
 	</div> <!-- End left column -->
@@ -173,8 +173,8 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                       tagsHTML(id) +
                       updatedHTML(id) + 
                       '</div><div class="col_1" style="text-align: right;">' + 
-                      '<span title="Slet begrebet fra databasen" class="icon-remove" style="cursor: pointer; color: red; margin: 5px 5px;" onClick="slet(' + id + ')"> </span><br /><br />' +
-                      '<span title="Tilføj begrebet til din begrebsliste" class="icon-large icon-arrow-right" style="cursor: pointer; color: #77F; margin: 5px 5px;" onClick="tilføj(' + id + ')"> </span>' +
+                      '<span title="Tilføj begrebet til din begrebsliste" class="icon-arrow-right" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span>&nbsp;' +
+                      '<span title="Slet begrebet fra databasen" class="icon-remove" style="cursor: pointer; color: red;" onClick="slet(' + id + ')"></span><br />' +
                       '</div></div>';
                   }
         
@@ -226,7 +226,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   }
 
   var updatedHTML = function(id) {
-    var t = '<div class="updated col_6" style="margin-top: 0.2em; opacity: 0.5; font-size: 0.8em;"><i title="sidst opdateret" class="icon-time icon-small"></i> ';     
+    var t = '<div class="updated col_6" style="opacity: 0.5"><i title="sidst opdateret" class="icon-time icon-small"></i> ';     
     for (index = 0; index < conceptsTable.length; ++index) {
       if (conceptsTable[index].id == id) {
         if (conceptsTable[index].updated !== "0000-00-00 00:00:00") {
