@@ -292,7 +292,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                     var updated = conceptsTable[j].updated        //get updated timestamp
                     //var updateduserid = conceptsTable[j].updateduserid //get id of last user to update
                     if (userEmailAuthorized) {
-                      searchOutput += '<div class="col_12 visible concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
+                      searchOutput += '<div class="col_12 concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
                       "<H6 class='concept' id='h" + id + "' contenteditable='true' style='margin: 5px 0 5px 0;'>" + name + "</H6>" + 
                       "<p id='p" + id + "' contenteditable='true'>" + description + "</p>" +
                       tagsHTML(id) +
@@ -302,7 +302,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                       '<span title="Slet begrebet fra databasen" class="icon-remove" style="cursor: pointer; color: red;" onClick="slet(' + id + ')"></span><br />' +
                       '</div></div>';
                     } else {
-                      searchOutput += '<div class="col_12 visible concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
+                      searchOutput += '<div class="col_12 concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
                       "<H6 class='concept' id='h" + id + "' contenteditable='false' style='margin: 5px 0 5px 0;'>" + name + "</H6>" + 
                       "<p id='p" + id + "' contenteditable='false'>" + description + "</p>" +
                       tagsHTML(id) +
@@ -771,7 +771,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       }
     });
     if (newTerm == true) {
-      var listOutput = '<div id="h' + id + '" class="col_12 visible list-post" style="cursor: move; padding: 2px 2px; margin: 2px 2px;"><i title="Fjern begrebet fra begrebslisten" style="opacity: 0.5; color: red; cursor: pointer;" class="icon-arrow-left" onClick="fjern(' + id + ')"></i> ' + concept + '</div>';
+      var listOutput = '<div id="h' + id + '" class="col_12 list-post" style="cursor: move; padding: 2px 2px; margin: 2px 2px;"><i title="Fjern begrebet fra begrebslisten" style="opacity: 0.5; color: red; cursor: pointer;" class="icon-arrow-left" onClick="fjern(' + id + ')"></i> ' + concept + '</div>';
       $("#myList").html($("#myList").html() + listOutput); 
     }
     if ($("#myList").parent().is(":visible")) {

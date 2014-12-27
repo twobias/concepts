@@ -18,6 +18,12 @@ p {
   margin-bottom: .1em;
 }
 
+*[class*="col_"].concept-post {
+background:#fff;
+border:1px solid #CCCCCC;
+border-radius: 5px;
+}
+
 div.tags {
   margin-top: 1em;
   font-size: 0.8em;
