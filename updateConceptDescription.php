@@ -15,18 +15,24 @@
       mysqli_stmt_execute($stmt);
       $result = mysqli_stmt_get_result($stmt);    
       //update revision
-      $lastid = mysqli_insert_id($con);
-      if ($stmt2 = mysqli_prepare($con, "INSERT INTO revisions (`userid`, `conceptid`, `timestamp`, `newdesc`) VALUES (?, ?, now(), ?)")) {
-        mysqli_stmt_bind_param($stmt2, "iis", $uid, $lastid, $description);
-        mysqli_stmt_execute($stmt2);
-        $result2 = mysqli_stmt_get_result($stmt2);    
-      } else {
-        echo "Error: " . $result2 . " (revision update)<br>" . mysqli_error($conn); 
-      }
+      if ($stmt2 = mysqli_prepare($con, "DELETE FROM revisions WHERE SUBTIME(now(), '00:10:00') < `timestamp` AND conceptid=?")) { //newer than 10 minutes
+      	mysqli_stmt_bind_param($stmt2, "i", $id);
+	      mysqli_stmt_execute($stmt2);
+	      $result2 = mysqli_stmt_get_result($stmt2);    
+	      if ($stmt3 = mysqli_prepare($con, "INSERT INTO revisions (`userid`, `conceptid`, `timestamp`, `newdesc`) VALUES (?, ?, now(), ?)")) {
+	        mysqli_stmt_bind_param($stmt3, "iis", $uid, $id, $description);
+	        mysqli_stmt_execute($stmt3);
+	        $result3 = mysqli_stmt_get_result($stmt3);    
+	      } else {
+	        echo "Error: " . $result3 . " (revision update)<br>" . mysqli_error($con); 
+	      }
+	    } else {
+	    	echo "Error: " . $result2 . " (delete old revisions)<br>" . mysqli_error($con); 
+	    }
     } else {
-      echo "Error: " . $result . "<br>" . mysqli_error($conn);
+      echo "Error: " . $result . "<br>" . mysqli_error($con);
     }
   } else {
-    echo "Error - invalid id or description";
+    echo "Error - invalid id or description.";
   }
 ?>
