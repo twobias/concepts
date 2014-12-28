@@ -10,8 +10,8 @@
   if (isset($_GET['uid']) && $uid = $_GET['uid']);
   
   if (($id > 0 ) && ($description != "")) {
-    if ($stmt = mysqli_prepare($con, "UPDATE (concepts) SET description=?, updated=now() WHERE id=?")) {
-      mysqli_stmt_bind_param($stmt, "si", $description, $id);
+    if ($stmt = mysqli_prepare($con, "UPDATE (concepts) SET description=?, updateduserid=?, updated=now() WHERE id=?")) {
+      mysqli_stmt_bind_param($stmt, "sii", $description, $uid, $id);
       mysqli_stmt_execute($stmt);
       $result = mysqli_stmt_get_result($stmt);    
       //update revision
@@ -20,6 +20,8 @@
         mysqli_stmt_bind_param($stmt2, "iis", $uid, $lastid, $description);
         mysqli_stmt_execute($stmt2);
         $result2 = mysqli_stmt_get_result($stmt2);    
+      } else {
+        echo "Error: " . $result2 . " (revision update)<br>" . mysqli_error($conn); 
       }
     } else {
       echo "Error: " . $result . "<br>" . mysqli_error($conn);
