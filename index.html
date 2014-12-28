@@ -29,12 +29,13 @@
 <body onload="initialize ()">
 
 <!-- <div id="header">Tobias arbejder for øjeblikket på serveren - siden kan derfor være ustabil</div> -->
+<div id="header">Tobias arbejder for øjeblikket på serveren - siden kan derfor være ustabil</div>
 
 <div class="grid">
 	<div class="col_12" style="margin: 0;"> <!--top row-->
     <div class="col_9">
   		<input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette"/>
-      <button id="opretButton" title="Opret nyt begreb i databasen" class="small green icon-plus" onclick="opret()" style="top: 3px;"> Opret</button>
+      <button id="opretButton" title="Opret nyt begreb i databasen" class="small green icon-plus" onclick="opret()" style="top: 3px; display: none;"> Opret</button>
       <button id="opdaterButton" title="Opdatér" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 3px;"></button>
       <span style="margin-left: 1.25em; vertical-align: middle;"><div title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
       <a id="comment" title="Kommentér på udviklingen af begrebsbasen" class="icon-comments icon-large" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a>

@@ -2,12 +2,10 @@
 
   require("dbapi.php");
 
-  $tableName = "tags";
-
   //--------------------------------------------------------------------------
   // Query database for data
   //--------------------------------------------------------------------------
-  $result = mysqli_query($con, "SELECT * FROM $tableName");          //query
+  $result = mysqli_query($con, "SELECT * FROM tags");          //query
   $rows = [];
   while($r = mysqli_fetch_assoc($result)) {
     $rows[] = $r;

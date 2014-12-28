@@ -2,16 +2,17 @@
 
   require("dbapi.php");
 
-  $tableName = "concepttags";
   if (isset($_GET['conceptid']) && $conceptid = $_GET['conceptid']);
   if (isset($_GET['tagid']) && $tagid = $_GET['tagid']);
   
   if ($tagid > 0) {
-    $sql = "DELETE FROM $tableName WHERE tagid=$tagid AND conceptid = $conceptid";
-    if (mysqli_query($con, $sql)) {
-        echo "concepttag slettet.";
+    /* create a prepared statement */
+    if ($stmt = mysqli_prepare($con, "DELETE FROM concepttag WHERE tagid=? AND conceptid = ?")) {
+      mysqli_stmt_bind_param($stmt, "ii", $tagid, $conceptid);
+      mysqli_stmt_execute($stmt);
+      $sql = mysqli_stmt_get_result($stmt);
     } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+      echo "Error: " . $stmt;
     }
   } else {
     echo "error id = " . $id;

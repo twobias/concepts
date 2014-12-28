@@ -2,12 +2,10 @@
 
   require("dbapi.php");
 
-  $tableName = "concepts";
-
   //--------------------------------------------------------------------------
   // Query database for data
   //--------------------------------------------------------------------------
-  $result = mysqli_query($con, "SELECT * FROM $tableName");          //query
+  $result = mysqli_query($con, "SELECT * FROM `concepts`");          //query
   $rows = [];
   while($r = mysqli_fetch_assoc($result)) {
     $rows[] = $r;
