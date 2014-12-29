@@ -291,8 +291,8 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                     //var updateduserid = conceptsTable[j].updateduserid //get id of last user to update
                     if (userEmailAuthorized) {
                       searchOutput += '<div class="col_12 concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
-                      "<H6 class='concept' id='h" + id + "' contenteditable='true' style='margin: 5px 0 5px 0;'>" + name + "</H6>" + 
-                      "<p id='p" + id + "' contenteditable='true'>" + description + "</p>" +
+                      "<H6 class='concept' id='h" + id + "' contenteditable='true' style='margin: 5px 0 5px 0;'><span class='hint--right hint--no-animate' data-hint='Klik for at redigere titlen'>" + name + "</span></H6>" + 
+                      "<p id='p" + id + "' contenteditable='true'><span class='hint--right hint--no-animate' data-hint='Klik for at redigere beskrivelsen'>" + description + "</span></p>" +
                       tagsHTML(id) +
                       updatedHTML(id) + 
                       '</div><div class="col_1" style="text-align: right;">' + 

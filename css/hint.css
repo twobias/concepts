@@ -65,6 +65,7 @@
   .hint:after, [data-hint]:after {
     content: attr(data-hint);
     font-family: Verdana, Arial, Sans-serif;
+    font-weight: normal;
     text-shadow: 0 0px 0 #000000;
     background: #383838;
     color: white;
