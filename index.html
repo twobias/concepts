@@ -31,41 +31,47 @@
 
 <!-- <div id="header">Tobias arbejder for øjeblikket på serveren - siden kan derfor være ustabil</div> -->
 
-<div class="grid">
-	<div class="col_12" style="margin: 0;"> <!--top row-->
-    <div class="col_9">
-  		<input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette"/>
-      <button id="opretButton" data-hint="Opret nyt begreb" class="hint--bottom hint--no-animate small green icon-plus" onclick="opret()" style="top: 3px; display: none;"> Opret</button>
-      <span data-hint="Hent opdateringer fra basen" class="hint--bottom hint--no-animate"><button id="opdaterButton" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 3px;"></button></span>
-      <span style="margin-left: 1.25em; vertical-align: middle;"><div class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
-      <span class="hint--bottom hint--no-animate" data-hint="Kommentér på udviklingen af begrebsbasen"><a id="comment" class="icon-comments icon-large" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a></span>
-      <div class="col_12" style="margin-bottom: 0;">
-        <span id="sortering" style="opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
-        <button id="SortAbc" onClick="sort('abc')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A øverst"> Abc</button>
-        <button id="SortCba" onClick="sort('cba')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A nederst"> Åøæ</button>
-        <button id="Sort123" onClick="sort('123')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb øverst"> 1sek</button>
-        <button id="Sort321" onClick="sort('321')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb nederst"> 99år</button>
-      </div>
-  	</div><!-- End left column -->
-    <div class="col_3" style="padding: 10px; opacity: 1;">
-      <span id="status"></span>
-      <button id="signin" data-hint="log på for at redigere begrebsbasen" style="display: none;" class="hint--bottom hint--no-animate small green">log på</button>
-      <span id="signout" style="display: none;" onClick="signOut()" data-hint="log af" class="hint--bottom hint--no-animate"><i style="color: red;" class="icon-signout"></i></span>
-    </div><!-- End right column -->
-  </div><!--End header row-->
+<nav id="navheader">
+  <div class="grid">
+    <div class="col_12" style="margin: 0;"> <!--top row-->
+      <div class="col_9" style="margin-top: 0;">
+        <input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette"/>
+        <button id="opretButton" data-hint="Opret nyt begreb" class="hint--bottom hint--no-animate small green icon-plus" onclick="opret()" style="top: 3px; display: none;"> Opret</button>
+        <span data-hint="Hent opdateringer fra basen" class="hint--bottom hint--no-animate"><button id="opdaterButton" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 3px;"></button></span>
+        <span style="margin-left: 1.25em; vertical-align: middle;"><div class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
+        <span class="hint--bottom hint--no-animate" data-hint="Kommentér på udviklingen af begrebsbasen"><a id="comment" class="icon-comments icon-large" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a></span>
+        <div class="col_12" style="margin-bottom: 0;">
+          <span id="sortering" style="opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
+          <button id="SortAbc" onClick="sort('abc')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A øverst"> Abc</button>
+          <button id="SortCba" onClick="sort('cba')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A nederst"> Åøæ</button>
+          <button id="Sort123" onClick="sort('123')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb øverst"> 1sek</button>
+          <button id="Sort321" onClick="sort('321')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb nederst"> 99år</button>
+        </div>
+      </div><!-- End left column -->
+      <div class="col_3" style="padding: 13px; opacity: 1; margin-top: 0;">
+        <span id="status"></span>
+        <button id="signin" data-hint="log på for at redigere begrebsbasen" style="top: 3px; display: none;" class="hint--bottom hint--no-animate small green">log på</button>
+        <span id="signout" style="display: none;" onClick="signOut()" data-hint="log af" class="hint--bottom hint--no-animate"><i style="color: red;" class="icon-signout"></i></span>
+      </div><!-- End right column -->
+    </div><!--End header row-->
+  </div>
+</nav>
 
-  <div class="col_12" style="margin: 0;"> <!--bottom row-->
-    <div class="col_9">
-      <div id="searchresults" class="col_12"></div> <!-- End list of terms -->
-    </div><!-- End left column -->
-    <div class="col_3"  style="display: none; padding: 10px; opacity: 1;">
-      <H6 style="margin: 0;">Min begrebsliste</H5>
-  	  <div id="myList" class="col_12"></div>
-  		<a id="eksporterListe" data-hint="Eksportér begrebslisten som liste" class="hint--bottom hint--no-animate icon-download" style="margin-bottom: .5em; cursor: pointer; float: right;"> Eksportér som liste <i class="icon-list" style="cursor: pointer"></i></a>
-  		<a id="eksporterTabel" data-hint="Eksportér begrebslisten som tabel" class="hint--bottom hint--no-animate icon-download" style="cursor: pointer; float: right;"> Eksportér som tabel <i class="icon-table" style="cursor: pointer"></i></a>
-  	</div> <!-- End right column -->
-  </div><!--End content row-->
-</div> <!-- End Grid -->
+<div id="content">
+  <div class="grid"> <!-- main contents of the page-->
+    <div class="col_12" style="margin: 0;"> <!--bottom row-->
+      <div class="col_9">
+        <div id="searchresults" class="col_12"></div> <!-- End list of terms -->
+      </div><!-- End left column -->
+      <div class="col_3"  style="display: none; padding: 10px; opacity: 1;">
+        <H6 style="margin: 0;">Min begrebsliste</H6>
+    	  <div id="myList" class="col_12"></div>
+    		<a id="eksporterListe" data-hint="Eksportér begrebslisten som liste" class="hint--bottom hint--no-animate icon-download" style="margin-bottom: .5em; cursor: pointer; float: right;"> Eksportér som liste <i class="icon-list" style="cursor: pointer"></i></a>
+    		<a id="eksporterTabel" data-hint="Eksportér begrebslisten som tabel" class="hint--bottom hint--no-animate icon-download" style="cursor: pointer; float: right;"> Eksportér som tabel <i class="icon-table" style="cursor: pointer"></i></a>
+    	</div> <!-- End right column -->
+    </div><!--End content row-->
+  </div> <!-- End Grid -->
+</div>
 
 <!-- ===================================== START FOOTER ===================================== -->
 <div class="clear"></div>
@@ -386,7 +392,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   }
 
   var updatedHTML = function(id, lastupdateduserid) {
-    var t = '<div class="updated col_6" style="opacity: 0.5"><span class="hint--bottom hint--no-animate" data-hint="Sidst opdateret"><i class="icon-time icon-small"></i></span> ';     
+    var t = '<div class="updated col_6" style="opacity: 0.5"><span class="hint--bottom hint--no-animate" data-hint="Sidst opdateret"><i class="icon-time icon-small"></i> ';     
     for (index = 0; index < conceptsTable.length; ++index) {
       if (conceptsTable[index].id == id) {
         var updater = "";
@@ -396,13 +402,13 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
           updater = userNameFromId(conceptsTable[index].updateduserid);
         }
         if (conceptsTable[index].updated !== "0000-00-00 00:00:00") {
-          t += "opdateret for " + timeSince(timestampToDate(conceptsTable[index].updated)) + " siden af " + updater;
+          t += "for " + timeSince(timestampToDate(conceptsTable[index].updated)) + " siden af " + updater;
         } else {
-          t += "opdateret for " + timeSince(timestampToDate(conceptsTable[index].created)) + " siden af " + updater;
+          t += "for " + timeSince(timestampToDate(conceptsTable[index].created)) + " siden af " + updater;
         }
       }
     }
-    t += "</div>";
+    t += "</span></div>";
     return t;
   }
   

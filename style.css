@@ -22,6 +22,9 @@ p {
   background:#fff;
   border:1px solid #CCCCCC;
   border-radius: 5px;
+  -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
 }
 
 div.tags {
@@ -76,6 +79,22 @@ table tr td {
   border-width: 1px;
   border-color: #000;
   border-bottom-width: 1px;
+}
+
+#navheader {
+  position: fixed;
+  background:#F0F0F0;
+  border:1px solid #CCC;
+  width: 100%;
+  top: 0px;
+  z-index: 100;
+  -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+#content {
+  margin: 75px auto;
 }
 
 #header {
