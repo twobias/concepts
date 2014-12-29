@@ -18,6 +18,15 @@ p {
   margin-bottom: .1em;
 }
 
+p.revision {
+  margin: 0.5em;
+}
+p.revisionquote {
+  margin: 0.5em;
+  margin-left: 2em;
+  font-size: 0.8em;
+}
+
 *[class*="col_"].concept-post, *[class*="col_"].list-post {
   background:#fff;
   border:1px solid #CCCCCC;
@@ -70,6 +79,11 @@ button.signin {
   margin-right: 21px;
 }
 
+a.historik {
+  color: #000;
+  cursor: pointer;
+}
+
 #cboxClose {
   display:none !important;
 }
@@ -95,11 +109,6 @@ table tr td {
 
 #content {
   margin: 75px auto;
-}
-
-#begrebsliste {
-	position: fixed;
-  top: 50px;	
 }
 
 #footer {

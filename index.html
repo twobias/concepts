@@ -255,7 +255,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
         //-----------------------------------------------------------------------
         // 2) get concepttags table
         //-----------------------------------------------------------------------
-            $.ajax({                                      
+          $.ajax({                                      
           url: 'getConceptTags.php',               //the script to call to get data          
           data: "",                       //you can insert url argumnets here to pass to api.php
                                           //for example "id=5&parent=6"
@@ -392,7 +392,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   }
 
   var updatedHTML = function(id, lastupdateduserid) {
-    var t = '<div class="updated col_6" style="opacity: 0.5"><span class="hint--bottom hint--no-animate" data-hint="Sidst opdateret"><i class="icon-time icon-small"></i> ';     
+    var t = '<div class="updated col_6" style="opacity: 0.5"><span class="hint--bottom hint--no-animate" data-hint="Vis historik"><a class="historik" onclick="showHistory(' + id + ')"><i class="icon-time icon-small"></i> ';     
     for (index = 0; index < conceptsTable.length; ++index) {
       if (conceptsTable[index].id == id) {
         var updater = "";
@@ -408,9 +408,38 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
         }
       }
     }
-    t += "</span></div>";
+    t += "</a></span></div>";
     return t;
   }
+
+  var showHistory = function (id) {
+    var rev = "<h5>Ingen historik</h5><p>Begrebet er sandsynligvis oprettet før historikfunktionen blev implementeret.</p>";
+    $.ajax({                                      
+      url: 'getRevisions.php',               //the script to call to get data          
+      data: "&conceptid=" + id,                       //you can insert url argumnets here to pass to api.php
+      dataType: 'json',               //data format      
+      success: function(revisionData)         //on recieve of reply
+      {  
+        if (revisionData.length > 0) {
+          rev = "<h5>Historik - " + conceptNameFromId(id) + "</h5>";
+          for(var j=0; j<revisionData.length; j++) {
+            if ((revisionData[j].newdesc == "") && (revisionData[j].newname != "")) {
+              //name updated
+              rev += "<p class='revision'><i class='icon-time icon-small'></i>for " + timeSince(timestampToDate(revisionData[j].timestamp)) + " siden omdøbte " + userNameFromId(revisionData[j].userid) + " begrebet til: <p class='revisionquote'>\"" + revisionData[j].newname + "\"</p></p>";
+            } else if ((revisionData[j].newdesc != "") && (revisionData[j].newname == "")) {
+              //desc updated
+              rev += "<p class='revision'><i class='icon-time icon-small'></i> for " + timeSince(timestampToDate(revisionData[j].timestamp)) + " siden ændrede " + userNameFromId(revisionData[j].userid) + " beskrivelsen til: <p class='revisionquote'>\"" + revisionData[j].newdesc + "\"</p></p>";
+            } else {
+              console.log ("unknown rev: " + revisionData[j]);
+              console.log (revisionData[j]);
+            }
+          }
+          rev += ""
+        }
+        $.colorbox({html : rev, maxWidth : "700px"});
+      }
+    });
+  }    
   
   function timeSince(date) {
     var seconds = Math.floor((new Date() - date) / 1000);
@@ -819,7 +848,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       }
     });
   }
-  
+
   var eksportTabel = function() {
     var tekst = "";
     $("#myList").children().each(function(i) {
