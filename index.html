@@ -15,6 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="css/colorbox.css" media="all" />
 	<link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" media="all" />
+	<link rel="stylesheet" href="css/hint.css" />
 	<link rel="stylesheet" type="text/css" href="style.css" media="all" />
 	
 	
@@ -34,22 +35,22 @@
 	<div class="col_12" style="margin: 0;"> <!--top row-->
     <div class="col_9">
   		<input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette"/>
-      <button id="opretButton" title="Opret nyt begreb i databasen" class="small green icon-plus" onclick="opret()" style="top: 3px; display: none;"> Opret</button>
-      <button id="opdaterButton" title="Opdatér" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 3px;"></button>
-      <span style="margin-left: 1.25em; vertical-align: middle;"><div title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
-      <a id="comment" title="Kommentér på udviklingen af begrebsbasen" class="icon-comments icon-large" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a>
+      <button id="opretButton" data-hint="Opret nyt begreb" class="hint--bottom hint--no-animate small green icon-plus" onclick="opret()" style="top: 3px; display: none;"> Opret</button>
+      <span data-hint="Hent opdateringer fra basen" class="hint--bottom hint--no-animate"><button id="opdaterButton" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 3px;"></button></span>
+      <span style="margin-left: 1.25em; vertical-align: middle;"><div class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
+      <span class="hint--bottom hint--no-animate" data-hint="Kommentér på udviklingen af begrebsbasen"><a id="comment" class="icon-comments icon-large" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a></span>
       <div class="col_12" style="margin-bottom: 0;">
         <span id="sortering" style="opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
-        <button id="SortAbc" onClick="sort('abc')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter alfabetisk med A øverst"> Abc</a>
-        <button id="SortCba" onClick="sort('cba')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter alfabetisk med A nederst"> Åøæ</a>
-        <button id="Sort123" onClick="sort('123')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter med nyest opdaterede begreb øverst"> 1sek</a>
-        <button id="Sort321" onClick="sort('321')" class="small" style="cursor: pointer; font-size: 0.512em;" title="Sorter med nyest opdaterede begreb nederst"> 99år</a>
+        <button id="SortAbc" onClick="sort('abc')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A øverst"> Abc</button>
+        <button id="SortCba" onClick="sort('cba')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A nederst"> Åøæ</button>
+        <button id="Sort123" onClick="sort('123')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb øverst"> 1sek</button>
+        <button id="Sort321" onClick="sort('321')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb nederst"> 99år</button>
       </div>
   	</div><!-- End left column -->
     <div class="col_3" style="padding: 10px; opacity: 1;">
       <span id="status"></span>
-      <button id="signin" title="log på for at redigere begrebsbasen" style="display: none;" class="small green">log på</button>
-      <span id="signout" style="display: none;" onClick="signOut()" title="log af"><i style="color: red;" class="icon-signout"></i></span>
+      <button id="signin" data-hint="log på for at redigere begrebsbasen" style="display: none;" class="hint--bottom hint--no-animate small green">log på</button>
+      <span id="signout" style="display: none;" onClick="signOut()" data-hint="log af" class="hint--bottom hint--no-animate"><i style="color: red;" class="icon-signout"></i></span>
     </div><!-- End right column -->
   </div><!--End header row-->
 
@@ -60,8 +61,8 @@
     <div class="col_3"  style="display: none; padding: 10px; opacity: 1;">
       <H6 style="margin: 0;">Min begrebsliste</H5>
   	  <div id="myList" class="col_12"></div>
-  		<a id="eksporterListe" title="Eksportér begrebslisten som liste" class="icon-download" style="margin-bottom: .5em; cursor: pointer; float: right;"> Eksportér som liste <i class="icon-list" style="cursor: pointer"></i></a>
-  		<a id="eksporterTabel" title="Eksportér begrebslisten som tabel" class="icon-download" style="cursor: pointer; float: right;"> Eksportér som tabel <i class="icon-table" style="cursor: pointer"></i></a>
+  		<a id="eksporterListe" data-hint="Eksportér begrebslisten som liste" class="hint--bottom hint--no-animate icon-download" style="margin-bottom: .5em; cursor: pointer; float: right;"> Eksportér som liste <i class="icon-list" style="cursor: pointer"></i></a>
+  		<a id="eksporterTabel" data-hint="Eksportér begrebslisten som tabel" class="hint--bottom hint--no-animate icon-download" style="cursor: pointer; float: right;"> Eksportér som tabel <i class="icon-table" style="cursor: pointer"></i></a>
   	</div> <!-- End right column -->
   </div><!--End content row-->
 </div> <!-- End Grid -->
@@ -152,7 +153,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
 
         if (canEdit == 1) {
           //document.getElementById('status').innerHTML += " (" + userEmail.substring(2,5).toUpperCase() + ")";
-          document.getElementById('status').innerHTML = "<span class='icon-ok-sign' style='color:green;' title='log-in godkendt - fuld adgang til at redigere i begrebsbasen'></span>&nbsp;" + "<span class='noselect' title='" + resp.displayName + "'>" + userEmail + "</span>";
+          document.getElementById('status').innerHTML = "<span class='hint--bottom hint--no-animate' data-hint='log-in godkendt - fuld adgang til at redigere i begrebsbasen'><span class='icon-ok-sign' style='color:green;'></span></span>&nbsp;" + "<span class='hint--bottom hint--no-animate noselect' data-hint='" + resp.displayName + "'>" + userEmail + "</span>";
           document.getElementById('signout').setAttribute('style', 'display: inline');
           document.getElementById('signin').setAttribute('style', 'display: none');
           if (userEmailAuthorized !== true) {
@@ -161,7 +162,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
             refresh();
           }
         } else {
-          document.getElementById('status').innerHTML = "<span class='icon-warning-sign' style='color:#FFCC00;' title='Du er logget på - men din konto har ikke adgang til at redigere. Log på med din @gg-drev.dk-konto eller bed Tobias om adgang med anden konto'></span>&nbsp;" + "<span class='noselect' title='" + resp.displayName + "'>" + userEmail + "</span>";
+          document.getElementById('status').innerHTML = "<span class='hint--bottom hint--no-animate' data-hint='Du er logget på - men din konto har ikke adgang til at redigere.'><span class='icon-warning-sign' style='color:#FFCC00;'></span></span>&nbsp;" + "<span class='hint--bottom hint--no-animate noselect' data-hint='" + resp.displayName + "'>" + userEmail + "</span>";
           document.getElementById('signout').setAttribute('style', 'display: inline');
           document.getElementById('signin').setAttribute('style', 'display: none');
           if (userEmailAuthorized !== false) {
@@ -295,8 +296,8 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                       tagsHTML(id) +
                       updatedHTML(id) + 
                       '</div><div class="col_1" style="text-align: right;">' + 
-                      '<span title="Tilføj begrebet til din begrebsliste" class="icon-arrow-right" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span>&nbsp;' +
-                      '<span title="Slet begrebet fra databasen" class="icon-remove" style="cursor: pointer; color: red;" onClick="slet(' + id + ')"></span><br />' +
+                      '<span class="hint--bottom hint--no-animate" data-hint="Tilføj begrebet til din begrebsliste"><span class="icon-arrow-right" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span></span>&nbsp;' +
+                      '<span class="hint--bottom hint--no-animate" data-hint="Slet begrebet"><span class="icon-remove" style="cursor: pointer; color: red;" onClick="slet(' + id + ')"></span></span><br />' +
                       '</div></div>';
                     } else {
                       searchOutput += '<div class="col_12 concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
@@ -305,7 +306,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                       tagsHTML(id) +
                       updatedHTML(id) + 
                       '</div><div class="col_1" style="text-align: right;">' + 
-                      '<span title="Tilføj begrebet til din begrebsliste" class="icon-arrow-right" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span>&nbsp;' +
+                      '<span class="hint--bottom hint--no-animate" data-hint="Tilføj begrebet til din begrebsliste"><span class="icon-arrow-right" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span></span>&nbsp;' +
                       '</div></div>';
                     }
                   }
@@ -385,7 +386,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   }
 
   var updatedHTML = function(id, lastupdateduserid) {
-    var t = '<div class="updated col_6" style="opacity: 0.5"><i title="sidst opdateret" class="icon-time icon-small"></i> ';     
+    var t = '<div class="updated col_6" style="opacity: 0.5"><span class="hint--bottom hint--no-animate" data-hint="Sidst opdateret"><i class="icon-time icon-small"></i></span> ';     
     for (index = 0; index < conceptsTable.length; ++index) {
       if (conceptsTable[index].id == id) {
         var updater = "";
@@ -433,11 +434,11 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   var tagsHTML = function(id) {
     var t;
     if (userEmailAuthorized) {
-      t = '<div class="tags"><i title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></i> <a title="Tilføj tag" class="icon-plus-sign" style="opacity: .75; margin-left: .5em; color: green; cursor: pointer;" onClick="tilføjTag(' + id + ')"></a>';     
+      t = '<div class="tags"><span class="hint--bottom hint--no-animate" data-hint="Tags"><i class="icon-tags" style="opacity: 0.75; color: #06f;"></i></span> <span class="hint--bottom hint--no-animate" data-hint="Tilføj tag"><a class="icon-plus-sign" style="opacity: .75; margin-left: .5em; color: green; cursor: pointer;" onClick="tilføjTag(' + id + ')"></a></span>';     
       for (index = 0; index < conceptTagsTable.length; ++index) {
         if (conceptTagsTable[index].conceptid == id) {
           var tag = tagNameFromId(conceptTagsTable[index].tagid);
-          t += ' <a title="Fjern tagget ' + tag + '" class="icon-remove-sign" style="opacity: .75; margin-left: .5em; color: red; cursor: pointer;" onClick="fjernTag(' + conceptTagsTable[index].tagid + ', ' + id + ')"></a>&nbsp;<span style="opacity: 0.75; color: #06f; cursor: pointer;" onClick="tagFilter(' + conceptTagsTable[index].tagid + ')">' + tag + '</span>';
+          t += ' <span class="hint--bottom hint--no-animate" data-hint="Fjern tagget ' + tag + '"><a class="icon-remove-sign" style="opacity: .75; margin-left: .5em; color: red; cursor: pointer;" onClick="fjernTag(' + conceptTagsTable[index].tagid + ', ' + id + ')"></a></span>&nbsp;<span style="opacity: 0.75; color: #06f; cursor: pointer;" onClick="tagFilter(' + conceptTagsTable[index].tagid + ')">' + tag + '</span>';
         }
       }
       t += "</div>";
@@ -446,7 +447,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       for (index = 0; index < conceptTagsTable.length; ++index) {
         if (conceptTagsTable[index].conceptid == id) {
           var tag = tagNameFromId(conceptTagsTable[index].tagid);
-          t += ' <i title="Tags" class="icon-tags" style="opacity: 0.75; color: #06f;"></i>&nbsp;' + '<span style="opacity: 0.75; color: #06f; cursor: pointer;" onClick="tagFilter(' + conceptTagsTable[index].tagid + ')">' + tag + '</span>';
+          t += ' <span class="hint--bottom hint--no-animate" data-hint="Tags"><i class="icon-tags" style="opacity: 0.75; color: #06f;"></i></span>&nbsp;' + '<span style="opacity: 0.75; color: #06f; cursor: pointer;" onClick="tagFilter(' + conceptTagsTable[index].tagid + ')">' + tag + '</span>';
         }
       }
       t += "</div>";
@@ -783,7 +784,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       }
     });
     if (newTerm == true) {
-      var listOutput = '<div id="h' + id + '" class="col_12 list-post" style="cursor: move; padding: 2px 2px; margin: 2px 2px;"><i title="Fjern begrebet fra begrebslisten" style="opacity: 0.5; color: red; cursor: pointer;" class="icon-arrow-left" onClick="fjern(' + id + ')"></i> ' + concept + '</div>';
+      var listOutput = '<div id="h' + id + '" class="col_12 list-post" style="cursor: move; padding: 2px 2px; margin: 2px 2px;"><span class="hint--bottom hint--no-animate" data-hint="Fjern begrebet fra begrebslisten"><i style="opacity: 0.5; color: red; cursor: pointer;" class="icon-arrow-left" onClick="fjern(' + id + ')"></i></span> ' + concept + '</div>';
       $("#myList").html($("#myList").html() + listOutput); 
     }
     if ($("#myList").parent().is(":visible")) {
