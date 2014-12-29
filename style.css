@@ -97,15 +97,9 @@ table tr td {
   margin: 75px auto;
 }
 
-#header {
-  font-family: verdana, arial, sans-serif; 
-  text-align:center;
-  padding:20px;
-  margin:0;
-  border-bottom:1px solid #ddd;
-  font-size:0.8em;
-  background: #FFCC00;  
-  width: 100%;
+#begrebsliste {
+	position: fixed;
+  top: 50px;	
 }
 
 #footer {
