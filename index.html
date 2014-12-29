@@ -422,10 +422,10 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
         if (revisionData.length > 0) {
           rev = "<h5>Historik - " + conceptNameFromId(id) + "</h5>";
           for(var j=0; j<revisionData.length; j++) {
-            if ((revisionData[j].newdesc == "") && (revisionData[j].newname != "")) {
+            if (((revisionData[j].newdesc == "") || (revisionData[j].newdesc =="...") ) && (revisionData[j].newname != "")) {
               //name updated
               rev += "<p class='revision'><i class='icon-time icon-small'></i>for " + timeSince(timestampToDate(revisionData[j].timestamp)) + " siden omdøbte " + userNameFromId(revisionData[j].userid) + " begrebet til: <p class='revisionquote'>\"" + revisionData[j].newname + "\"</p></p>";
-            } else if ((revisionData[j].newdesc != "") && (revisionData[j].newname == "")) {
+            } else if ((revisionData[j].newdesc != "") && ((revisionData[j].newname == "") || (revisionData[j].newdesc =="..."))) {
               //desc updated
               rev += "<p class='revision'><i class='icon-time icon-small'></i> for " + timeSince(timestampToDate(revisionData[j].timestamp)) + " siden ændrede " + userNameFromId(revisionData[j].userid) + " beskrivelsen til: <p class='revisionquote'>\"" + revisionData[j].newdesc + "\"</p></p>";
             } else {
