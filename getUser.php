@@ -20,6 +20,11 @@
       mysqli_stmt_bind_param($stmt2, "s", $email);
       mysqli_stmt_execute($stmt2);
       $result2 = mysqli_stmt_get_result($stmt2);
+      if ($stmt3 = mysqli_prepare($con, "UPDATE users SET `firstlogin` = now() WHERE `email` = ? AND `firstlogin` IS NULL")) {
+	      mysqli_stmt_bind_param($stmt3, "s", $email);
+	      mysqli_stmt_execute($stmt3);
+	      $result3 = mysqli_stmt_get_result($stmt3);
+    	}
     }
   } else {
     //if no result - create user (&update firstlogin timestamp)  

@@ -8,7 +8,7 @@
 	<meta name="description" content="Database over faglige begreber" />
   <meta name="google-signin-clientid" content="307014362498-50ima1junno67dvj6ebviug5mfq8sbca.apps.googleusercontent.com" />
   <meta name="google-signin-scope" content="email" />
-  <meta name="google-signin-cookiepolicy" content="single_host_origin" />
+  <meta name="google-signin-cookiepolicy" content="http://twobias.synology.me" />
   <meta name="google-signin-callback" content="signinCallback" />
 
 	<!-- CSS -->
@@ -94,11 +94,9 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
 
   /* Executed when the (Google) APIs finish loading */
   function render() {
-    // Attach a click listener to a button to trigger the flow.
-    var signinButton = document.getElementById('signin');
     // Load the Google+ API
     gapi.client.load('plus', 'v1').then(function() {
-      signinButton.addEventListener('click', function() {
+      document.getElementById('signin').addEventListener('click', function() {
         gapi.auth.signIn(); // Will use page level configuration
       });
       document.getElementById('signin').setAttribute('style', 'display: inline'); //unhide
@@ -163,7 +161,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
             refresh();
           }
         } else {
-          document.getElementById('status').innerHTML = "<span class='icon-warning-sign' style='color:#FFCC00;' title='Du er logget på - men din konto har ikke adgang til at redigere. Log på med din @gg-drev.dk-konto eller bed Tobias om adgang med anden konto'></span>&nbsp;" + "<span class='noselect' title='" + resp.displayName + "'>" + document.getElementById('status').innerHTML + "</span>";
+          document.getElementById('status').innerHTML = "<span class='icon-warning-sign' style='color:#FFCC00;' title='Du er logget på - men din konto har ikke adgang til at redigere. Log på med din @gg-drev.dk-konto eller bed Tobias om adgang med anden konto'></span>&nbsp;" + "<span class='noselect' title='" + resp.displayName + "'>" + userEmail + "</span>";
           document.getElementById('signout').setAttribute('style', 'display: inline');
           document.getElementById('signin').setAttribute('style', 'display: none');
           if (userEmailAuthorized !== false) {
