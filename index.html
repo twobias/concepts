@@ -29,48 +29,43 @@
 </head>
 <body onload="initialize ()">
 
-<nav id="navheader">
-  <div class="grid">
-    <div class="col_12" style="margin: 0;"> <!--top row-->
-      <div class="col_9" style="margin-top: 0;">
-        <input id="searchbox" class="col_6" type="search" placeholder="Begreb du vil søge efter eller oprette"/>
-        <button id="opretButton" data-hint="Opret nyt begreb" class="hint--bottom hint--no-animate small green icon-plus" onclick="opret()" style="top: 3px; display: none;"> Opret</button>
-        <span data-hint="Hent opdateringer fra basen" class="hint--bottom hint--no-animate"><button id="opdaterButton" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 3px;"></button></span>
-        <span style="margin-left: 1.25em; vertical-align: middle;"><div class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
-        <span class="hint--bottom hint--no-animate" data-hint="Kommentér på udviklingen af begrebsbasen"><a id="comment" class="icon-comments icon-large" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a></span>
-        <div class="col_12" style="margin-bottom: 0;">
-          <!--<span data-hint="Tobias arbejder for øjeblikket på serveren - siden kan derfor være ustabil" class="hint--bottom hint--no-animate" style="margin-left: 5px; padding-top: 3px;"><i class='icon-warning-sign' style='color: #FF0000'></i></span>-->
-          <span id="sortering" style="opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
-          <button id="SortAbc" onClick="sort('abc')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A øverst"> Abc</button>
-          <button id="SortCba" onClick="sort('cba')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A nederst"> Åøæ</button>
-          <button id="Sort123" onClick="sort('123')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb øverst"> 1sek</button>
-          <button id="Sort321" onClick="sort('321')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb nederst"> 99år</button>
-        </div>
-      </div><!-- End left column -->
-      <div class="col_3" style="padding: 13px; opacity: 1; margin-top: 0;">
-        <span id="status"></span>
-        <button id="signin" data-hint="log på for at redigere begrebsbasen" style="top: 3px; display: none;" class="hint--bottom hint--no-animate small green">log på</button>
-        <span id="signout" style="display: none;" onClick="signOut()" data-hint="log af" class="hint--bottom hint--no-animate"><i style="color: red;" class="icon-signout"></i></span>
-      </div><!-- End right column -->
-    </div><!--End header row-->
-  </div>
-</nav>
 
-<div id="content">
-  <div class="grid"> <!-- main contents of the page-->
-    <div class="col_12" style="margin: 0;"> <!--bottom row-->
-      <div class="col_9">
-        <div id="searchresults" class="col_12"></div> <!-- End list of terms -->
-      </div><!-- End left column -->
-      <div id="begrebsliste" class="col_3"  style="display: none; padding: 10px; opacity: 1;">
-        <H6 style="margin: 0;">Min begrebsliste</H6>
-    	  <div id="myList" class="col_12"></div>
-    		<a id="eksporterListe" data-hint="Eksportér begrebslisten som liste" class="hint--bottom hint--no-animate icon-download" style="margin-bottom: .5em; cursor: pointer; float: right;"> Eksportér som liste <i class="icon-list" style="cursor: pointer"></i></a>
-    		<a id="eksporterTabel" data-hint="Eksportér begrebslisten som tabel" class="hint--bottom hint--no-animate icon-download" style="cursor: pointer; float: right;"> Eksportér som tabel <i class="icon-table" style="cursor: pointer"></i></a>
-    	</div> <!-- End right column -->
-    </div><!--End content row-->
-  </div> <!-- End Grid -->
-</div>
+<div class="grid">
+  <div class="col_12" style="margin: 0;"> <!--top row-->
+    <div class="col_9" style="margin: 0;">
+      <input id="searchbox" class="col_4" type="search" placeholder="Begreb du vil søge efter"/>
+      <button id="opretButton" data-hint="Opret nyt begreb" class="hint--bottom hint--no-animate small green icon-plus" onclick="opret()" style="top: 3px; display: none;"> Opret</button>
+      <span data-hint="Hent opdateringer fra basen" class="hint--bottom hint--no-animate"><button id="opdaterButton" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 3px;"></button></span>
+      <span style="margin-left: 1.25em; vertical-align: middle;"><div class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
+      <span class="hint--bottom hint--no-animate" data-hint="Kommentér på udviklingen af begrebsbasen"><a id="comment" class="icon-comments icon-large" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a></span>
+    </div><!-- End left column -->
+    <div class="col_3" style="padding: 13px; opacity: 1; margin: 0;">
+      <span id="status"></span>
+      <button id="signin" data-hint="log på for at redigere begrebsbasen" style="top: 3px; display: none;" class="hint--bottom hint--no-animate small green">log på</button>
+      <span id="signout" style="display: none;" onClick="signOut()" data-hint="log af" class="hint--bottom hint--no-animate"><i style="color: red;" class="icon-signout"></i></span>
+    </div><!-- End right column -->
+  </div><!--End header row-->
+
+  <div class="col_12" style="margin: 0;"> <!--bottom row--><!-- main contents of the page-->
+    <div class="col_9" style="margin: 0;">
+      <div class="col_12" style="margin-bottom: 0;">
+        <!--<span data-hint="Tobias arbejder for øjeblikket på serveren - siden kan derfor være ustabil" class="hint--bottom hint--no-animate" style="margin-left: 5px; padding-top: 3px;"><i class='icon-warning-sign' style='color: #FF0000'></i></span>-->
+        <span id="sortering" style="opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
+        <button id="SortAbc" onClick="sort('abc')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A øverst"> Abc</button>
+        <button id="SortCba" onClick="sort('cba')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A nederst"> Åøæ</button>
+        <button id="Sort123" onClick="sort('123')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb øverst"> 1sek</button>
+        <button id="Sort321" onClick="sort('321')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb nederst"> 99år</button>
+      </div>
+      <div id="searchresults" class="col_12"></div> <!-- End list of terms -->
+    </div><!-- End left column -->
+    <div id="begrebsliste" class="col_3"  style="display: none; padding: 10px; opacity: 1;">
+      <H6 style="margin: 0;">Min begrebsliste</H6>
+  	  <div id="myList" class="col_12"></div>
+  		<a id="eksporterListe" data-hint="Eksportér begrebslisten som liste" class="hint--bottom hint--no-animate icon-download" style="margin-bottom: .5em; cursor: pointer; float: right;"> Eksportér som liste <i class="icon-list" style="cursor: pointer"></i></a>
+  		<a id="eksporterTabel" data-hint="Eksportér begrebslisten som tabel" class="hint--bottom hint--no-animate icon-download" style="cursor: pointer; float: right;"> Eksportér som tabel <i class="icon-table" style="cursor: pointer"></i></a>
+  	</div> <!-- End right column -->
+  </div><!--End content row-->
+</div><!--end grid-->
 
 <!-- ===================================== START FOOTER ===================================== -->
 <div class="clear"></div>
@@ -95,7 +90,36 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       }
     });
     $("#myList").disableSelection();
-    sort("abc");
+    //Session storage - cookie
+    var userToken = readCookie("concepts-pl");
+    if (userToken != null) {
+    	attemptTokenLogin(userToken)
+    } else {
+			sort("abc"); 
+    }
+  }
+
+  var attemptTokenLogin = function (userToken) {
+  	var oldMail = userToken.split("#")[0] // mail is right before # in the token
+  	$.ajax({                                      
+    url: 'validateToken.php',             //the script to call to get data          
+    data: {oldtoken : userToken},
+    dataType: 'json',               		//data format      
+    success: function(authorized)       //on recieve of reply
+      {
+        if (authorized) {
+        	//If accept - set new cookie
+        	console.log("token login authorized...");
+					var fakeGAPIresponse = {emails: []};
+					var fakeEmail = {type : 'account', value: userToken.split("#")[0]};
+					fakeGAPIresponse.emails.push(fakeEmail);
+	    		handleGAPIResponse(fakeGAPIresponse);
+        } else {
+        	console.log("token login denied authorization!");
+        	sort("abc"); 
+        }
+      }
+    });
   }
 
   /* Executed when the (Google) APIs finish loading */
@@ -103,7 +127,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     // Load the Google+ API
     gapi.client.load('plus', 'v1').then(function() {
       document.getElementById('signin').addEventListener('click', function() {
-        gapi.auth.signIn(); // Will use page level configuration
+      	gapi.auth.signIn(); // Will use page level configuration
       });
       document.getElementById('signin').setAttribute('style', 'display: inline'); //unhide
     });
@@ -125,38 +149,37 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
 
   var makeAPICall = function () {
     // Assemble the API request
-    var request = gapi.client.plus.people.get({userId: 'me'}).execute(handleEmailResponse);
+    var request = gapi.client.plus.people.get({userId: 'me'}).execute(handleGAPIResponse);
   }
   
+  var oldEmail;
   var userEmail; 
   var userId;
   var userEmailAuthorized; 
-  var handleEmailResponse = function (resp) {
+  var handleGAPIResponse = function (resp) {
+    oldEmail = userEmail;
     for (var i=0; i < resp.emails.length; i++) {
-      if (resp.emails[i].type === 'account') userEmail = resp.emails[i].value;
+      if (resp.emails[i].type === 'account') {
+      	userEmail = resp.emails[i].value;
+      }
     }
     //console.log(resp);
+    console.log("generating token...");
+    var token = generateToken(userEmail);
+		createCookie("concepts-pl", token, 6);
 
     //test if user exists in users table
     $.ajax({                                      
     url: 'getUser.php',             //the script to call to get data          
-    data: "email=" + userEmail     //you can insert url argumnets here to pass to api.php
-        + "&name=" + resp.displayName,
+    data: {email : userEmail, name: resp.displayName, token: token},
     dataType: 'json',               //data format      
-    success: function(dbData)       //on recieve of reply
+    success: function(userData)       //on recieve of reply
       {
         var searchOutput = "";
-        var userData = dbData;
 
-        for(var j=0; j<userData.length; j++) {
-          userId = userData[j].id; //global var - used in later requests
-          var name = userData[j].name;
-          var firstlogin = userData[j].firstlogin;  
-          var lastlogin = userData[j].lastlogin;
-          var canEdit = userData[j].canedit;
-        }
+        userId = userData[0].id; //global var - used in later requests
 
-        if (canEdit == 1) {
+        if (userData[0].canedit == 1) {
           //document.getElementById('status').innerHTML += " (" + userEmail.substring(2,5).toUpperCase() + ")";
           document.getElementById('status').innerHTML = "<span class='hint--bottom hint--no-animate hint--success' data-hint='log-in godkendt - fuld adgang til at redigere i begrebsbasen'><span class='icon-ok-sign' style='color:green;'></span></span>&nbsp;" + "<span class='hint--bottom hint--no-animate noselect' data-hint='" + resp.displayName + "'>" + userEmail + "</span>";
           document.getElementById('signout').setAttribute('style', 'display: inline');
@@ -180,11 +203,47 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     });
   }
 
+  var generateToken = function(userEmail) {
+  	var hex = "";
+  	for (char = 0; char < 32; char++) {
+  		var r = Math.floor(Math.random() * 16);
+  		var hexChars = "0123456789ABCDEF";
+  		hex += hexChars[r];
+  	}
+  	return userEmail + "#" + hex;
+  }
+
+  function createCookie(name,value,days) {
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "; expires="+date.toGMTString();
+	}
+	else var expires = "";
+		document.cookie = name+"="+value+expires+"; path=/";
+	}
+
+	function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+		return null;
+	}
+
+	function eraseCookie(name) {
+		createCookie(name,"",-1);
+	}
+
   var signOut = function () {
     document.getElementById('signin').setAttribute('style', 'display: inline');
     document.getElementById('signout').setAttribute('style', 'display: none');
     document.getElementById('status').innerHTML = "";
     gapi.auth.signOut();
+    userEmail = null;
     if (userEmailAuthorized !== false) {
         userEmailAuthorized = false;
         disableEditing();
@@ -202,9 +261,10 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
 
   var refresh = function() {
     $('#searchresults').html("<img src='css/images/loading.gif' />");
-    setTimeout(function() {
+    getDB();
+    /*setTimeout(function() {
       getDB();
-    }, 25);
+    }, 25);*/
   }
   
   var sort = function(order) {
@@ -415,7 +475,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     var rev = "<h5>Ingen historik</h5><p>Begrebet er sandsynligvis oprettet før historikfunktionen blev implementeret.</p>";
     $.ajax({                                      
       url: 'getRevisions.php',               //the script to call to get data          
-      data: "&conceptid=" + id,                       //you can insert url argumnets here to pass to api.php
+      data: {conceptid : id},                       //you can insert url argumnets here to pass to api.php
       dataType: 'json',               //data format      
       success: function(revisionData)         //on recieve of reply
       {  
@@ -424,7 +484,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
           for(var j=0; j<revisionData.length; j++) {
             if (((revisionData[j].newdesc == "") || (revisionData[j].newdesc =="...") ) && (revisionData[j].newname != "")) {
               //name updated
-              rev += "<p class='revision'><i class='icon-time icon-small'></i> for " + timeSince(timestampToDate(revisionData[j].timestamp)) + " siden omdøbte " + userNameFromId(revisionData[j].userid) + " begrebet til: <p class='revisionquote'>\"" + revisionData[j].newname + "\"</p></p>";
+              rev += "<p class='revision'><i class='icon-time icon-small'></i> for " + timeSince(timestampToDate(revisionData[j].timestamp)) + " siden ændrede " + userNameFromId(revisionData[j].userid) + " navnet til: <p class='revisionquote'>\"" + revisionData[j].newname + "\"</p></p>";
             } else if ((revisionData[j].newdesc != "") && ((revisionData[j].newname == "") || (revisionData[j].newdesc =="..."))) {
               //desc updated
               rev += "<p class='revision'><i class='icon-time icon-small'></i> for " + timeSince(timestampToDate(revisionData[j].timestamp)) + " siden ændrede " + userNameFromId(revisionData[j].userid) + " beskrivelsen til: <p class='revisionquote'>\"" + revisionData[j].newdesc + "\"</p></p>";

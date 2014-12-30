@@ -95,22 +95,6 @@ table tr td {
   border-bottom-width: 1px;
 }
 
-#navheader {
-  position: fixed;
-  background:#F0F0F0;
-  border:1px solid #CCC;
-  width: 100%;
-  top: 0px;
-  z-index: 100;
-  -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
-}
-
-#content {
-  margin: 75px auto;
-}
-
 #footer {
   font-family: verdana, arial, sans-serif; 
   text-align:center;
@@ -133,7 +117,6 @@ table tr td {
   z-index: 1000;
   float: left;
   display: none;
-  min-width: 160px;   
   padding: 4px 0;
   margin: 0 0 10px 25px;
   list-style: none;
