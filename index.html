@@ -36,8 +36,13 @@
       <input id="searchbox" class="col_4" type="search" placeholder="Begreb du vil søge efter"/>
       <button id="opretButton" data-hint="Opret nyt begreb" class="hint--bottom hint--no-animate small green icon-plus" onclick="opret()" style="top: 3px; display: none;"> Opret</button>
       <span data-hint="Hent opdateringer fra basen" class="hint--bottom hint--no-animate"><button id="opdaterButton" class="small blue icon-refresh" onclick="refresh()" style="margin-left: 1em; top: 3px;"></button></span>
-      <span style="margin-left: 1.25em; vertical-align: middle;"><div class="icon-tags" style="opacity: 0.75; color: #06f;"></div></span><input type="search" id="tagsearchbox" class="col_3" placeholder="tag du vil filtrere efter" />
-      <span class="hint--bottom hint--no-animate" data-hint="Kommentér på udviklingen af begrebsbasen"><a id="comment" class="icon-comments icon-large" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a></span>
+      <span data-hint="Tobias arbejder for øjeblikket på serveren - siden kan derfor være ustabil" class="hint--bottom hint--no-animate" style="margin-left: 5px; padding-top: 3px;"><i class='icon-warning-sign' style='color: #FF0000'></i></span>
+      <span id="sortering" style="opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
+      <button id="SortAbc" onClick="sort('abc')" class="hint--bottom hint--no-animate small" style="cursor: pointer;" data-hint="Sorter alfabetisk med A øverst"> Abc</button>
+      <button id="SortCba" onClick="sort('cba')" class="hint--bottom hint--no-animate small" style="cursor: pointer;" data-hint="Sorter alfabetisk med A nederst"> Åøæ</button>
+      <button id="Sort123" onClick="sort('123')" class="hint--bottom hint--no-animate small" style="cursor: pointer;" data-hint="Sorter med nyest opdaterede begreb øverst"> 1sek</button>
+      <button id="Sort321" onClick="sort('321')" class="hint--bottom hint--no-animate small" style="cursor: pointer" data-hint="Sorter med nyest opdaterede begreb nederst"> 99år</button>
+      <span class="hint--bottom hint--no-animate" data-hint="Kommentér på udviklingen af begrebsbasen"><a id="comment" class="icon-comments icon-large" style="margin-left: 1em;" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a></span>
     </div><!-- End left column -->
     <div class="col_3" style="padding: 13px; opacity: 1; margin: 0;">
       <span id="status"></span>
@@ -48,14 +53,6 @@
 
   <div class="col_12" style="margin: 0;"> <!--bottom row--><!-- main contents of the page-->
     <div class="col_9" style="margin: 0;">
-      <div class="col_12" style="margin-bottom: 0;">
-        <!--<span data-hint="Tobias arbejder for øjeblikket på serveren - siden kan derfor være ustabil" class="hint--bottom hint--no-animate" style="margin-left: 5px; padding-top: 3px;"><i class='icon-warning-sign' style='color: #FF0000'></i></span>-->
-        <span id="sortering" style="opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
-        <button id="SortAbc" onClick="sort('abc')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A øverst"> Abc</button>
-        <button id="SortCba" onClick="sort('cba')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter alfabetisk med A nederst"> Åøæ</button>
-        <button id="Sort123" onClick="sort('123')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb øverst"> 1sek</button>
-        <button id="Sort321" onClick="sort('321')" class="hint--bottom hint--no-animate small" style="cursor: pointer; font-size: 0.512em;" data-hint="Sorter med nyest opdaterede begreb nederst"> 99år</button>
-      </div>
       <div id="searchresults" class="col_12"></div> <!-- End list of terms -->
     </div><!-- End left column -->
     <div id="begrebsliste" class="col_3"  style="display: none; padding: 10px; opacity: 1;">
@@ -302,13 +299,6 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
         for(var j=0; j<tagData.length; j++) {
           availableTags.push(tagsTable[j].name);             //form array for autofill in tagsearchbox
         }
-        $("#tagsearchbox").autocomplete({
-          source: availableTags,
-          messages: {
-            noResults: '',
-            results: function() {}
-          }
-        });
         
  
         //-----------------------------------------------------------------------
@@ -567,7 +557,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   }
 
   var tagFilter = function (id) {
-    $("#tagsearchbox").val(tagNameFromId(id));
+    $("#searchbox").val(tagNameFromId(id));
     setTimeout(function()
       {
         search();
@@ -745,23 +735,13 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     }
     return $this;
   }).on('change', function() {search();});
-  $('#tagsearchbox').on('focus', function() {
-    var $this = $(this);
-    $this.data('before', $this.val());
-    return $this;
-  }).on('blur keyup paste input', function() {
-    var $this = $(this);
-    if ($this.data('before') !== $this.val()) {
-        $this.data('before', $this.val());
-        $this.trigger('change');
-    }
-    return $this;
-  }).on('change', function() {search();});
 
   
-  var search = function() {
+  var search = function(searchstring) {
+    if (searchstring != null) {
+      $('#searchbox').val('searchstring').trigger('focus');
+    }
     var s = $("#searchbox").val().toLowerCase();
-    var ts = $("#tagsearchbox").val().toLowerCase();
     $(".concept-post").each(function(i) {
       var thisid = $(this).find("h6.concept")[0].id.slice(1);
       var thistags = "";
@@ -771,9 +751,10 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
         }
       }
       if (
-        (($(this).find("h6.concept").text().toLowerCase().indexOf(s) > -1) 
-        || ($(this).find("p").text().toLowerCase().indexOf(s) > -1)) 
-        && (thistags.toLowerCase().indexOf(ts) > -1))
+        ($(this).find("h6.concept").text().toLowerCase().indexOf(s) > -1) //if title of a concept matches
+        || ($(this).find("p").text().toLowerCase().indexOf(s) > -1)       //or if description of a concept matches
+        || (thistags.toLowerCase().indexOf(s) > -1)                       //or if tags of a concept match
+      )
       {
         //for each element in DB, hide if it doesn't have the searchterm in it's name (OR in its text) OR if it is excluded by tagfilter
         $(this).css({'display':'block'});
@@ -857,7 +838,6 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       url: 'insertConcept.php',       //the script to call to get data          
       data: "name="+name+"&uid="+userId,
       complete: function() {
-        $("#tagsearchbox").val(""); //rens filterfeltet så det nye begreb kan vises
         refresh();
       }
     });
