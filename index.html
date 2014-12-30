@@ -177,7 +177,6 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
         userId = userData[0].id; //global var - used in later requests
 
         if (userData[0].canedit == 1) {
-          //document.getElementById('status').innerHTML += " (" + userEmail.substring(2,5).toUpperCase() + ")";
           document.getElementById('status').innerHTML = "<span class='hint--bottom hint--no-animate hint--success' data-hint='log-in godkendt - fuld adgang til at redigere i begrebsbasen'><span class='icon-ok-sign' style='color:green;'></span></span>&nbsp;" + "<span class='hint--bottom hint--no-animate noselect' data-hint='" + resp.displayName + "'>" + userEmail + "</span>";
           document.getElementById('signout').setAttribute('style', 'display: inline');
           document.getElementById('signin').setAttribute('style', 'display: none');
@@ -287,6 +286,28 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     refresh();
   } 
   
+  $.widget( "custom.catcomplete", $.ui.autocomplete, {
+    _create: function() {
+      this._super();
+      this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+    },
+    _renderMenu: function( ul, items ) {
+      var that = this,
+        currentCategory = "";
+      $.each( items, function( index, item ) {
+        var li;
+        if ( item.category != currentCategory ) {
+          ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+          currentCategory = item.category;
+        }
+        li = that._renderItemData( ul, item );
+        if ( item.category ) {
+          li.attr( "aria-label", item.category + " : " + item.label );
+        }
+      });
+    }
+  });
+
   var getDB = function() {
     //-----------------------------------------------------------------------
     // 1) get tags table
@@ -301,7 +322,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       {
         tagsTable = tagData;
         for(var j=0; j<tagData.length; j++) {
-          availableTags.push(tagsTable[j].name);             //form array for autofill in tagsearchbox
+          availableTags.push({label : tagsTable[j].name, category: "Tags"})             //form array for autofill in tagsearchbox
         }
         $("#searchbox").autocomplete({    
           source: availableTags,   
@@ -353,7 +374,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                   {
                     var id = conceptsTable[j].id;             //get id
                     var name = conceptsTable[j].name;           //get name
-                    if(autoCompleteArray.indexOf(name) == -1) autoCompleteArray.push(name);
+                    if(autoCompleteArray.indexOf(name) == -1) autoCompleteArray.push({label : name, category: "Begreber"});
                     var description = conceptsTable[j].description;    //get description
                     
                     //var updateduserid = conceptsTable[j].updateduserid //get id of last user to update
@@ -379,7 +400,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                     }
                   }
 
-                $("#searchbox").autocomplete({    
+                $("#searchbox").catcomplete({    
                   source: autoCompleteArray,   
                   messages: {    
                     noResults: '',   
