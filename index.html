@@ -109,7 +109,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       {
         if (authorized) {
         	//If accept - set new cookie
-        	console.log("token login authorized...");
+        	//console.log("token login authorized...");
 					var fakeGAPIresponse = {emails: []};
 					var fakeEmail = {type : 'account', value: userToken.split("#")[0]};
 					fakeGAPIresponse.emails.push(fakeEmail);
@@ -164,7 +164,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       }
     }
     //console.log(resp);
-    console.log("generating token...");
+    //console.log("generating token...");
     var token = generateToken(userEmail);
 		createCookie("concepts-pl", token, 6);
 
