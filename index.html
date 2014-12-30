@@ -36,7 +36,7 @@
       <input id="searchbox" class="col_4" type="search" placeholder="Begreb du vil søge efter"/>
       <button id="opretButton" data-hint="Opret nyt begreb" class="hint--bottom hint--no-animate small green icon-plus" onclick="opret()" style="top: 3px; display: none;"> Opret</button>
       <!--<span data-hint="Tobias arbejder for øjeblikket på serveren - siden kan derfor være ustabil" class="hint--bottom hint--no-animate" style="margin-left: 5px; padding-top: 3px;"><i class='icon-warning-sign' style='color: #FF0000'></i></span>-->
-      <span id="sortering" style="margin: 0 1em; opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
+      <span id="sortering" style="margin: 0 1em; opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;"></span>
       <button id="SortAbc" onClick="sort('abc')" class="hint--bottom hint--no-animate small" style="cursor: pointer; top: 3px;" data-hint="Sorter alfabetisk med A øverst"> Abc</button>
       <button id="SortCba" onClick="sort('cba')" class="hint--bottom hint--no-animate small" style="cursor: pointer; top: 3px;" data-hint="Sorter alfabetisk med A nederst"> Åøæ</button>
       <button id="Sort123" onClick="sort('123')" class="hint--bottom hint--no-animate small" style="cursor: pointer; top: 3px;" data-hint="Sorter med nyest opdaterede begreb øverst"> 1sek</button>
@@ -89,7 +89,8 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     //Session storage - cookie
     var userToken = readCookie("concepts-pl");
     if (userToken != null) {
-    	attemptTokenLogin(userToken)
+    	sort(readCookie("concepts-sorting"));
+      attemptTokenLogin(userToken)
     } else {
 			sort("abc"); 
     }
@@ -270,12 +271,16 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     $("#Sort321").removeClass("blue");
     if (order == "abc") {
       $("#SortAbc").addClass("blue");
+      createCookie("concepts-sorting", order);
     } else if (order == "cba") {
       $("#SortCba").addClass("blue");
+      createCookie("concepts-sorting", order);
     } else if (order == "123") {
       $("#Sort123").addClass("blue");
+      createCookie("concepts-sorting", order);
     } else if (order == "321") {
       $("#Sort321").addClass("blue");
+      createCookie("concepts-sorting", order);
     } else {
       console.log("Error: unknow sort order in sort()");
     }
@@ -385,8 +390,8 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                 //--------------------------------------------------------------------
                 // 4) Update html content
                 //--------------------------------------------------------------------
-                $('#searchresults').html(searchOutput) //Set output element html
-                $('#sortering').html("" + conceptsTable.length + " begreber ") //Set output element html
+                $('#searchresults').html(searchOutput); //Set output element html
+                $('#sortering').html("" + conceptsTable.length + " begreber "); //Set output element html
                 search();
               } 
             });
@@ -760,6 +765,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       $('#searchbox').val('searchstring').trigger('focus');
     }
     var s = $("#searchbox").val().toLowerCase();
+    var resultCount = 0;
     $(".concept-post").each(function(i) {
       var thisid = $(this).find("h6.concept")[0].id.slice(1);
       var thistags = "";
@@ -776,10 +782,16 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       {
         //for each element in DB, hide if it doesn't have the searchterm in it's name (OR in its text) OR if it is excluded by tagfilter
         $(this).css({'display':'block'});
+        resultCount++;
       } else {
         $(this).css({'display':'none'});
       }
     });
+    if (resultCount == 1) {
+      $('#sortering').html("" + resultCount + " begreb "); //Set output element html  
+    } else {
+      $('#sortering').html("" + resultCount + " begreber "); //Set output element html  
+    }
   }
   
   
