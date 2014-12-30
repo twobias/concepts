@@ -324,14 +324,6 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
         for(var j=0; j<tagData.length; j++) {
           availableTags.push({label : tagsTable[j].name, category: "Tags"})             //form array for autofill in tagsearchbox
         }
-        $("#searchbox").autocomplete({    
-          source: availableTags,   
-          messages: {    
-            noResults: '',   
-            results: function() {}   
-          }    
-        });
-        
  
         //-----------------------------------------------------------------------
         // 2) get concepttags table
@@ -374,7 +366,11 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                   {
                     var id = conceptsTable[j].id;             //get id
                     var name = conceptsTable[j].name;           //get name
-                    if(autoCompleteArray.indexOf(name) == -1) autoCompleteArray.push({label : name, category: "Begreber"});
+                    var alreadyHasConceptAsTag = false;
+                    for (var t=0; t<autoCompleteArray.length; t++) {
+                      if(autoCompleteArray[t].label == name) alreadyHasConceptAsTag = true;
+                    }
+                    if (alreadyHasConceptAsTag == false) autoCompleteArray.push({label : name, category: "Begreber"});
                     var description = conceptsTable[j].description;    //get description
                     
                     //var updateduserid = conceptsTable[j].updateduserid //get id of last user to update
