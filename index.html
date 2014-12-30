@@ -36,11 +36,11 @@
       <input id="searchbox" class="col_4" type="search" placeholder="Begreb du vil søge efter"/>
       <button id="opretButton" data-hint="Opret nyt begreb" class="hint--bottom hint--no-animate small green icon-plus" onclick="opret()" style="top: 3px; display: none;"> Opret</button>
       <!--<span data-hint="Tobias arbejder for øjeblikket på serveren - siden kan derfor være ustabil" class="hint--bottom hint--no-animate" style="margin-left: 5px; padding-top: 3px;"><i class='icon-warning-sign' style='color: #FF0000'></i></span>-->
-      <span id="sortering" style="margin-left: 1em; opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
-      <button id="SortAbc" onClick="sort('abc')" class="hint--bottom hint--no-animate small" style="cursor: pointer;" data-hint="Sorter alfabetisk med A øverst"> Abc</button>
-      <button id="SortCba" onClick="sort('cba')" class="hint--bottom hint--no-animate small" style="cursor: pointer;" data-hint="Sorter alfabetisk med A nederst"> Åøæ</button>
-      <button id="Sort123" onClick="sort('123')" class="hint--bottom hint--no-animate small" style="cursor: pointer;" data-hint="Sorter med nyest opdaterede begreb øverst"> 1sek</button>
-      <button id="Sort321" onClick="sort('321')" class="hint--bottom hint--no-animate small" style="cursor: pointer" data-hint="Sorter med nyest opdaterede begreb nederst"> 99år</button>
+      <span id="sortering" style="margin: 0 1em; opacity: 0.5; font-family: Verdana, Arial, Sans-serif; font-size: 0.64em;">Sortér begreber efter:</span>
+      <button id="SortAbc" onClick="sort('abc')" class="hint--bottom hint--no-animate small" style="cursor: pointer; top: 3px;" data-hint="Sorter alfabetisk med A øverst"> Abc</button>
+      <button id="SortCba" onClick="sort('cba')" class="hint--bottom hint--no-animate small" style="cursor: pointer; top: 3px;" data-hint="Sorter alfabetisk med A nederst"> Åøæ</button>
+      <button id="Sort123" onClick="sort('123')" class="hint--bottom hint--no-animate small" style="cursor: pointer; top: 3px;" data-hint="Sorter med nyest opdaterede begreb øverst"> 1sek</button>
+      <button id="Sort321" onClick="sort('321')" class="hint--bottom hint--no-animate small" style="cursor: pointer; top: 3px;" data-hint="Sorter med nyest opdaterede begreb nederst"> 99år</button>
       <span class="hint--bottom hint--no-animate" data-hint="Kommentér på udviklingen af begrebsbasen"><a id="comment" class="icon-comments icon-large" style="margin-left: 1em;" href="https://docs.google.com/document/d/1E9ujAWe9Ao2ilaBFKTJy1nak6JGuiTIv6mTjhtZ40MQ/edit" target="_blank"></a></span>
     </div><!-- End left column -->
     <div class="col_3" style="padding: 13px; opacity: 1; margin: 0;">
@@ -359,7 +359,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                       tagsHTML(id) +
                       updatedHTML(id) + 
                       '</div><div class="col_1" style="text-align: right;">' + 
-                      '<span class="hint--bottom hint--no-animate" data-hint="Tilføj begrebet til din begrebsliste"><span class="icon-arrow-right" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span></span>&nbsp;' +
+                      '<span class="hint--bottom hint--no-animate" data-hint="Tilføj begrebet til din begrebsliste"><span class="icon-bookmark-empty" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span></span>&nbsp;' +
                       '<span class="hint--bottom hint--no-animate" data-hint="Slet begrebet"><span class="icon-remove" style="cursor: pointer; color: red;" onClick="slet(' + id + ')"></span></span><br />' +
                       '</div></div>';
                     } else {
@@ -369,7 +369,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                       tagsHTML(id) +
                       updatedHTML(id) + 
                       '</div><div class="col_1" style="text-align: right;">' + 
-                      '<span class="hint--bottom hint--no-animate" data-hint="Tilføj begrebet til din begrebsliste"><span class="icon-arrow-right" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span></span>&nbsp;' +
+                      '<span class="hint--bottom hint--no-animate" data-hint="Tilføj begrebet til din begrebsliste"><span class="icon-bookmark-empty" style="cursor: pointer; color: #77F;" onClick="tilføj(' + id + ')"></span></span>&nbsp;' +
                       '</div></div>';
                     }
                   }
@@ -386,7 +386,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                 // 4) Update html content
                 //--------------------------------------------------------------------
                 $('#searchresults').html(searchOutput) //Set output element html
-                $('#sortering').html("sortér " + conceptsTable.length + " begreber: ") //Set output element html
+                $('#sortering').html("" + conceptsTable.length + " begreber ") //Set output element html
                 search();
               } 
             });
@@ -868,6 +868,12 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     $(".concept-post").each(function(i) {
       if ($(this).find("h6.concept")[0].id.slice(1) == id) {
         concept = $(this).find("h6.concept").text();
+        var iconTooltip = $(this).find("[data-hint*='Tilføj begrebet til din begrebsliste']");
+        iconTooltip[0].setAttribute("data-hint", "Fjern begrebet fra din begrebsliste");
+        var iconButton = $(this).find(".icon-bookmark-empty");
+        iconButton[0].onclick = function() {fjern(id);};
+        iconButton.removeClass("icon-bookmark-empty");
+        iconButton.addClass("icon-bookmark");
       }
     });
     $(".list-post").each(function(i) {
@@ -904,6 +910,16 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
         });
       }
     });
+    $(".concept-post").each(function(i) {
+      if ($(this).find("h6.concept")[0].id.slice(1) == id) {
+        var iconTooltip = $(this).find("[data-hint*='Fjern begrebet fra din begrebsliste']");
+        iconTooltip[0].setAttribute("data-hint", "Tilføj begrebet til din begrebsliste");
+        var iconButton = $(this).find(".icon-bookmark");
+        iconButton[0].onclick = function() {tilføj(id);};
+        iconButton.removeClass("icon-bookmark");
+        iconButton.addClass("icon-bookmark-empty");
+      }
+    });   
   }
 
   var eksportTabel = function() {
