@@ -299,6 +299,13 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
         for(var j=0; j<tagData.length; j++) {
           availableTags.push(tagsTable[j].name);             //form array for autofill in tagsearchbox
         }
+        $("#searchbox").autocomplete({    
+          source: availableTags,   
+          messages: {    
+            noResults: '',   
+            results: function() {}   
+          }    
+        });
         
  
         //-----------------------------------------------------------------------
@@ -324,6 +331,8 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
               {
                 var searchOutput = "";
                 conceptsTable = dbData;
+
+                var autoCompleteArray = availableTags;
                 
                 //sort conceptstable by name
                 if ($("#SortAbc").hasClass("blue")) {
@@ -340,9 +349,9 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                   {
                     var id = conceptsTable[j].id;             //get id
                     var name = conceptsTable[j].name;           //get name
+                    if(autoCompleteArray.indexOf(name) == -1) autoCompleteArray.push(name);
                     var description = conceptsTable[j].description;    //get description
-                    var created = conceptsTable[j].created;        //get creation timestamp
-                    var updated = conceptsTable[j].updated        //get updated timestamp
+                    
                     //var updateduserid = conceptsTable[j].updateduserid //get id of last user to update
                     if (userEmailAuthorized) {
                       searchOutput += '<div class="col_12 concept-post" style="padding: 2px 5px; margin: 3px 0px;"><div class="col_11" style="margin: 2px 5px;">'+
@@ -365,6 +374,14 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                       '</div></div>';
                     }
                   }
+
+                $("#searchbox").autocomplete({    
+                  source: autoCompleteArray,   
+                  messages: {    
+                    noResults: '',   
+                    results: function() {}   
+                  }    
+                });
         
                 //--------------------------------------------------------------------
                 // 4) Update html content
@@ -703,6 +720,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
   //
   //Enter to add new term
   //
+  /*
   $("#searchbox").on('keydown', function(ev) {
     var s = $("#searchbox").val();
     if ((ev.keyCode == 13) && (s !== "") && userEmailAuthorized){ 
@@ -718,7 +736,8 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     } else {
       //console.log(ev.keyCode);
     }
-  } );
+  });
+  */
   
   //
   //triggers events when the search box or search tag box is changed
