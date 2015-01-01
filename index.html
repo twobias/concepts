@@ -55,7 +55,7 @@
       <div id="searchresults" class="col_12"></div> <!-- End list of terms -->
     </div><!-- End left column -->
     <div id="begrebsliste" class="col_3"  style="display: none; padding: 10px; opacity: 1;">
-      <H6 style="margin: 0;">Min begrebsliste</H6>
+      <H6 style="display: inline; margin: 0;">Min begrebsliste</H6> <i style="color: #77F; display: inline;" class="icon-bookmark"></i>
   	  <div id="myList" class="col_12"></div>
   		<a id="eksporterListe" data-hint="Eksportér begrebslisten som liste" class="hint--bottom hint--no-animate icon-download" style="margin-bottom: .5em; cursor: pointer; float: right;"> Eksportér som liste <i class="icon-list" style="cursor: pointer"></i></a>
   		<a id="eksporterTabel" data-hint="Eksportér begrebslisten som tabel" class="hint--bottom hint--no-animate icon-download" style="cursor: pointer; float: right;"> Eksportér som tabel <i class="icon-table" style="cursor: pointer"></i></a>
@@ -349,7 +349,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
                 var searchOutput = "";
                 conceptsTable = dbData;
 
-                var autoCompleteArray = availableTags;
+                var autoCompleteArray = availableTags.slice(0); //copy available tags array (slice0 to prevent just linking to it by reference)
                 
                 //sort conceptstable by name
                 if ($("#SortAbc").hasClass("blue")) {
@@ -619,7 +619,7 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
           if ((ev.which == 13) && (t !== "")){ 
             var newTerm = true;
             for (index = 0; index < availableTags.length; ++index) {
-              if (availableTags[index].toLowerCase() == t) {
+              if (availableTags[index].label.toLowerCase() == t) {
                 newTerm = false;
               }
             }
@@ -686,12 +686,13 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
     }
   }
 
-  var fjernTag = function (tag, id) {
-    fjernTagFraBegreb(tag, id);
+  var fjernTag = function (tag, id, confirmation) {
+    if (confirmation === undefined) confirmation = true;
+    fjernTagFraBegreb(tag, id, confirm);
   }
   
-  var fjernTagFraBegreb = function (tag, id) {
-    if (confirm("fjern tagget " + tagNameFromId(tag) + " fra " + conceptNameFromId(id) + "?")) {
+  var fjernTagFraBegreb = function (tag, id, confirmation) {
+    if ((confirmation === false) || (confirm("fjern tagget " + tagNameFromId(tag) + " fra " + conceptNameFromId(id) + "?"))) {
       $.ajax({                                      
         url: 'deleteConceptTag.php',       //the script to call to get data          
         data: {tagid : tag, conceptid : id},
@@ -853,6 +854,16 @@ This work is licensed by <a href="http://tobias.bindslet.dk/">Tobias Bindslet</a
       if ($(this).find("h6.concept")[0].id.slice(1) == id) {
         var begreb = $(this).find("h6.concept").text() + "?";
         if (confirm("Slet begrebet " + begreb)) {
+          //first, delete the concepttag associations
+          
+          //for each tag...
+          for (index = 0; index < conceptTagsTable.length; ++index) {
+            if (conceptTagsTable[index].conceptid == id) {
+              fjernTagFraBegreb(conceptTagsTable[index].tagid, id, false);
+            }
+          }
+
+          //then delete the concept itself
           $(this).hide(250, function() {
             if ($(this).find("h6.concept").text() == "Nyt Begreb") {
               $("#searchbox").text("");
